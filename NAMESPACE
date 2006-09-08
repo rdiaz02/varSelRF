@@ -1,0 +1,13 @@
+export("basicClusterInit", "varSelRF",
+       "varSelRFBoot", "randomVarImpsRF",
+       "randomVarImpsRFplot",
+       "varSelImpSpecRF",
+       "selProbPlot")
+       
+importFrom(randomForest, randomForest, importance)
+
+S3method(print, varSelRF)
+S3method(plot, varSelRF)
+S3method(print, varSelRFBoot)
+S3method(summary, varSelRFBoot)
+S3method(plot, varSelRFBoot)       

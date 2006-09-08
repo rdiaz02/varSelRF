@@ -1,0 +1,10 @@
+0.6:
+- Much more testing (with geneSrF application)
+- Fixed bug in varSelRF when passing an already fitted forest.
+- Changed randomVarImpsRFplot to user default colors friendlier for
+  color-blind people.
+- Fixed problem when running plots in non-interactive sessions.
+
+0.5-4:
+- Seed of SPRNG is the default of Snow.
+- summary.varSelRFBoot: fixed usage of "plotFreqs" (non existing variable).
