@@ -146,9 +146,6 @@ varSelRF <- function(xdata, Class,
         FirstForest <- rf
     else
         FirstForest <- NULL
-    
-                                        #    rf <- randomForest(x = xdata, y = Class, importance= TRUE,
-                                        #                       ntree = ntree, keep.forest = FALSE)
     m.iterated.ob.error <- m.initial.ob.error <- oobError(rf)
     sd.iterated.ob.error <- sd.initial.ob.error <-
         sqrt(m.iterated.ob.error * (1 - m.iterated.ob.error) *
@@ -159,10 +156,6 @@ varSelRF <- function(xdata, Class,
                     round(m.initial.ob.error, 4),
                     "; sd = ", round(sd.initial.ob.error, 4), sep = ""))
     }
-
-### previous code (rF < 4.3.1)
-    #selected.vars <- order(rf$importance[, (ncol(rf$importance) - 1)], decreasing = TRUE)
-#    ordered.importance <- rf$importance[selected.vars,(ncol(rf$importance) -1)]
 
     importances <- importance(rf, type = 1, scale = FALSE)
     selected.vars <- order(importances, decreasing = TRUE)
@@ -180,39 +173,24 @@ varSelRF <- function(xdata, Class,
     var.simplify <- TRUE
     
     while(var.simplify) {
-        last.rf <- rf
+        print("gc inside loop of varSelRF")
+        print(gc())
+        
+        ## last.rf <- rf; why do we do this?
+        last.rf <- NULL
         last.vars <- selected.vars
-#        print(paste(".........Number of variables before selection",
-#                    dim(xdata)[2])) ## debug
         previous.m.error <- m.iterated.ob.error
         previous.sd.error <- sd.iterated.ob.error
 
         if(recompute.var.imp & (j > 1)) {
-            ## need to set indexxes as absolute w.r.t. original data
-####            tmp.order <- order(rf$importance[, (ncol(rf$importance) - 1)],
-####                                    decreasing = TRUE)
-####            selected.vars <- selected.vars[tmp.order]
-####            ordered.importance <- rf$importance[tmp.order, (ncol(rf$importance) -1)]
-
             importances <- importance(rf, type = 1, scale = FALSE)
             tmp.order <- order(importances, decreasing = TRUE)
             selected.vars <- selected.vars[tmp.order]
             ordered.importances <- importances[tmp.order]
-
         }
         
         num.vars <- length(selected.vars)
   
-####        if(any(is.na(ordered.importances))) {
-####            print("**********  Nas in ordered.importances ******")
-####            browser()
-####        }
-           
-## I eliminate this, since not selecting neg. imps is implicit in rest of code.
-        ##        if(any(ordered.importances < 0)) {
-##            selected.vars <- selected.vars[-which(ordered.importances < 0)]
-##            ordered.importances <- ordered.importances[-which(ordered.importances < 0)]
-##        } else {
         if(is.null(vars.drop.num))
             vars.drop <- round(num.vars * vars.drop.frac)
         else vars.drop <- vars.drop.num
@@ -310,7 +288,6 @@ varSelRF <- function(xdata, Class,
         vars <- vars[1:j]
         OOB.rf<- OOB.rf[1:j]
         OOB.sd <- OOB.sd[1:j]
-        ##browser()
         min.oob.ci <- min(OOB.rf) + c.sd * OOB.sd[which.min(OOB.rf)]
         best.pos <-
             which(OOB.rf <= min.oob.ci)[which.min(n.vars[which(OOB.rf <= min.oob.ci)])]
@@ -553,6 +530,8 @@ varSelRFBoot <- function(xdata, Class,
 ##                                      ytest = test.class)$test
         output.cl$class.pred.array <- boot.run.test$predicted
         output.cl$prob.pred.array <- boot.run.test$votes
+        rm(boot.run.test)
+        gc()
         return(output.cl)
     } ## bootTrainTest; this function is defined to be used in the cluster.
     ## we use it too if not in the cluster. There is a bit too much
@@ -562,6 +541,9 @@ varSelRFBoot <- function(xdata, Class,
     ## and the non-cluster is slow for other reasons.
     
     if(usingCluster) {
+        print("gc inside varSelRFBoot papply")
+        print(gc())
+        
         clusterEvalQ(TheCluster,
                      rm(list = c("xdataTheCluster", "ClassTheCluster")))
         xdataTheCluster <<- xdata
@@ -601,63 +583,6 @@ varSelRFBoot <- function(xdata, Class,
         cat("\n")
     }
         
-####        for(nboot in 1:bootnumber) {
-####            sample.again <- TRUE
-####            while(sample.again) {
-####                bootsample <- unlist(tapply(1:N,  Class,
-####                                            function(x)
-####                                            sample(x, size = length(x),
-####                                                   replace = TRUE)))
-####                ## sure, this isn't the fastest, but will do for now.
-####                nobootsample <- setdiff(1:N, bootsample)
-####                if(!length(nobootsample))
-####                    sample.again <- TRUE
-####                else sample.again <- FALSE
-####            }
-####        ## this is an ugly hack to prevent nobootsamples
-####        ## of size 0.
-        
-####            train.data <- xdata[bootsample, , drop = FALSE]
-####            test.data <- xdata[nobootsample, , drop = FALSE]
-####            train.class <- Class[bootsample]
-####            test.class <- Class[nobootsample]
-            
-####            boot.run <- varSelRF(Class = train.class,
-####                                 xdata = train.data,
-####                                 c.sd = c.sd,
-####                                 mtryFactor = mtryFactor,
-####                                 ntree = ntree,
-####                                 ntreeIterat = ntreeIterat,
-####                                 whole.range = whole.range,
-####                                 recompute.var.imp = recompute.var.imp,
-####                                 vars.drop.frac = vars.drop.frac,
-####                                 ...)
-####            output.cl <- list()
-####            output.cl$best.model.nvars <- boot.run$best.model.nvars
-####            output.cl$selected.model <- boot.run$selected.model
-####            output.cl$selected.vars <- boot.run$selected.vars
-####            output.cl$nobootsample <- nobootsample
-####            output.cl$bootsample <- bootsample
-####            output.cl$initialImportances <- boot.run$initialImportances
-####            output.cl$initialOrderedImportances <- boot.run$initialOrderedImportances
-####            output.cl$selec.history <- boot.run$selec.history
-            
-####            boot.col.data <- which(colnames(xdata) %in%
-####                                   boot.run$selected.vars)
-####            run.test.mtry <- floor(mtryFactor * sqrt(length(boot.col.data)))
-####            if(run.test.mtry > length(boot.col.data)) run.test.mtry <- length(boot.col.data)
-####            boot.run.test <- randomForest(y  = train.class,
-####                                          x = train.data[, boot.col.data, drop = FALSE],
-####                                          ntree = boot.run$ntree,
-####                                          mtry = run.test.mtry,
-####                                          keep.forest = FALSE,
-####                                          xtest = test.data[, boot.col.data, drop = FALSE],
-####                                          ytest = test.class)$test
-            
-####            output.cl$class.pred.array <- boot.run.test$predicted
-####            output.cl$prob.pred.array <- boot.run.test$votes
-####            boot.runs[[nboot]] <- output.cl
-####        } ## </bootstrap run without cluster>
 
     solutions <- unlist(lapply(boot.runs, function(z) {
         paste(sort(z$selected.vars), collapse = " + ")}))
