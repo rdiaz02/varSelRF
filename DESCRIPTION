@@ -1,10 +1,11 @@
 Package: varSelRF
-Version: 0.6-2
-Date: 2005-07-27
+Version: 0.6-3
+Date: 2006-09-21
 Title: Variable selection using random forests
 Author: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
 Maintainer: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
 Depends: R (>= 2.0.0), randomForest
+Suggests: snow, Rmpi
 Description: Variable selection from random forests
 	     using both backwards variable elimination (for the selection of
 	     small sets of non-redundant variables) and selection based on the
@@ -12,7 +13,8 @@ Description: Variable selection from random forests
 	     selection of large, potentially highly-correlated variables). 
 	     Main applications in high-dimensional data
 	     (e.g., microarray data, and other genomics and proteomics
-	     applications).
+	     applications). You can use rpvm instead of Rmpi if you want
+	     but I've only tested with Rmpi.
 LazyLoad: Yes
 License: GPL version 2 or newer
 URL: http://www.r-project.org, http://ligarto.org/rdiaz/Software/Software.html,

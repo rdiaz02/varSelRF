@@ -4,6 +4,7 @@
 - Changed randomVarImpsRFplot to user default colors friendlier for
   color-blind people.
 - Fixed problem when running plots in non-interactive sessions.
+- Fixed warnings with R-2.4.0
 
 0.5-4:
 - Seed of SPRNG is the default of Snow.

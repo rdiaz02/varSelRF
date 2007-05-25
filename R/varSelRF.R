@@ -59,7 +59,7 @@ basicClusterInit <- function(clusterNumberNodes = 1,
       library(Rmpi)
   }
   if(typeCluster == "PVM") {
-      library(rpvm)
+      print("Make sure you have rpvm installed. We have only checked with Rmpi. Then do library(rpvm)")
   }
   if(length(find(nameCluster)))
       stop("\nThere is another object called ", nameCluster,".\n",
