@@ -863,6 +863,7 @@ plot.varSelRFBoot <- function(x,
         }
     }
     if(ErrorNum) {
+        par(las = 2)
         all.data.errors <- x$all.data.run$selec.history$OOB
         ngenes <- x$all.data.run$selec.history$Number.Variables
         maxplot <-
@@ -892,7 +893,8 @@ plot.varSelRFBoot <- function(x,
 ###                  main = "CV Error rate vs. Number of genes in predictor.")
         legend(x = 10, y = maxplot,
                legend = c("Bootstrap samples", "Original sample"),
-               lty = c(2, 1), lwd = c(1, 3), col = c("Black", "Red"))
+               lty = c(2, 1), lwd = c(1, 3), col = c("Black", "Red"),
+               bty = "n")
 ##        box()
 ##        axis(2)
 ##        axis(1)
