@@ -1,5 +1,5 @@
 Package: varSelRF
-Version: 0.6-3
+Version: 0.6-4
 Date: 2006-09-21
 Title: Variable selection using random forests
 Author: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
@@ -17,6 +17,6 @@ Description: Variable selection from random forests
 	     but I've only tested with Rmpi.
 LazyLoad: Yes
 License: GPL version 2 or newer
-URL: http://www.r-project.org, http://ligarto.org/rdiaz/Software/Software.html,
+URL: http://ligarto.org/rdiaz/Software/Software.html,
 http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html
 Packaged: Fri Aug 19 13:58:45 2005; ramon
