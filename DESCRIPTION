@@ -1,6 +1,6 @@
 Package: varSelRF
-Version: 0.6-4
-Date: 2006-09-21
+Version: 0.6-5
+Date: 2008-04-17
 Title: Variable selection using random forests
 Author: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
 Maintainer: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
