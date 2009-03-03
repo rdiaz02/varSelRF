@@ -38,7 +38,7 @@ rsprng. You might also need to start your cluster environment (e.g.,
   cluster will be created. See \code{\link[snow]{makeCluster}} for details.
 }
 \references{\url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}}
-\author{Ramon Diaz-Uriarte \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 \note{ It is a lot better if you specify all arguments: if you really
   have a netwrok of workstations you can use, you will need to specify
   the number of nodes and the correct type of cluster (MPI or PVM). If

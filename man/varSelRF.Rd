@@ -129,7 +129,7 @@ varSelRF(xdata, Class, c.sd = 1, mtryFactor = 1, ntree = 5000,
  Computer Science, vol. 3077.  Berlin: Springer.
 
 }
-\author{Ramon Diaz-Uriarte  \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte  \email{rdiaz02@gmail.com}}
 
 \seealso{\code{\link[randomForest]{randomForest}},
   \code{\link{plot.varSelRF}},

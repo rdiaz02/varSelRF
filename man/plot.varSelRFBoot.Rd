@@ -48,7 +48,7 @@
  
 }
 
-\author{Ramon Diaz-Uriarte \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 \note{
   When plotting the out-of-bag predictions, we show one plot for each
   class. This is an overkill for two-class problems, but not necessarily

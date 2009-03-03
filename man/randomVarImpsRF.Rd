@@ -62,7 +62,7 @@ randomVarImpsRF(xdata, Class, forest, numrandom = 100,
  Computer Science, vol. 3077.  Berlin: Springer.
 
 }
-\author{Ramon Diaz-Uriarte  \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte  \email{rdiaz02@gmail.com}}
 
 \seealso{\code{\link[randomForest]{randomForest}},
   \code{\link{varSelRF}},

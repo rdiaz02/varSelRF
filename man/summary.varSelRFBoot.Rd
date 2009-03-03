@@ -59,7 +59,7 @@
     
 
 }
-\author{Ramon Diaz-Uriarte  \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte  \email{rdiaz02@gmail.com}}
 
 \seealso{\code{\link[randomForest]{randomForest}},
   \code{\link{varSelRF}},

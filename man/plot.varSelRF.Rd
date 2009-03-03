@@ -25,7 +25,7 @@
     expression
     data. Tech. report. \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
 }
-\author{Ramon Diaz-Uriarte \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 \section{Warning }{The OOB Error rate is biased down (and can be
   severely biased down) because we do (potentially many) rounds of
   reducing the set of predictor variables until we minimize this OOB

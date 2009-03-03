@@ -78,7 +78,7 @@ varSelImpSpecRF(forest, xdata = NULL, Class = NULL,
   \emph{J. Royal Statistical Society, Series B}, \bold{66}, 815--850. } 
 
 
-\author{Ramon Diaz-Uriarte \email{rdiaz@ligarto.org}} \note{The name
+\author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}} \note{The name
   of this function is related to the idea of "importance spectrum plot",
   which is the term that \cite{Friedman \& Meulman, 2005} use in their paper.}
 

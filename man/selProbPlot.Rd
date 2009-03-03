@@ -69,7 +69,7 @@ selProbPlot(object, k = c(20, 100),
  Computer Science, vol. 3077.  Berlin: Springer.
 }
 
-\author{Ramon Diaz-Uriarte \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 
 \note{This function is in very rudimentary shape and could be used for
   more general types of data. I wrote specifically to produce Fig.\ 4 of

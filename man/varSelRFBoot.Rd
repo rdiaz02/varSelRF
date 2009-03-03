@@ -126,7 +126,7 @@ varSelRFBoot(xdata, Class, c.sd = 1,
  Computer Science, vol. 3077.  Berlin: Springer.
 
 }
-\author{Ramon Diaz-Uriarte  \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte  \email{rdiaz02@gmail.com}}
 
 \note{The out-of-bag predictions stored in \code{class.predictions} and
   \code{prob.predictions} are NOT the OOB votes from random
