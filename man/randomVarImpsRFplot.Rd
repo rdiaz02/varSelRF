@@ -1,10 +1,9 @@
 \name{randomVarImpsRFplot}
 \alias{randomVarImpsRFplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{ Plot random random variable importances}
+\title{Plot random random variable importances}
 \description{
   Plot variable importances from random permutations of class labels and
-  the variable importances from the original data set.}
+  the variable importances from the original data set.
 }
 \usage{
 randomVarImpsRFplot(randomImportances, forest,
@@ -19,8 +18,6 @@ randomVarImpsRFplot(randomImportances, forest,
                     xlab = NULL,
                     ylab = NULL, ...)
 }
-
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{randomImportances}{A list with a structure such as the object
     return by \code{\link{randomVarImpsRF}}}.
@@ -67,7 +64,7 @@ randomVarImpsRFplot(randomImportances, forest,
 \value{
   Only used for its side effects of producing plots. In particular, you
   will see lines of three colors:
-   \item{black} {Connects the variable importances from the original
+   \item{black}{Connects the variable importances from the original
     simulated data. }
   \item{green}{Connect the variable
     importances from the data sets with permuted class labels; there
@@ -94,7 +91,7 @@ randomVarImpsRFplot(randomImportances, forest,
   Friedman, J., Meulman, J. (2005) Clustering objects on subsets of attributes (with discussion).
   \emph{J. Royal Statistical Society, Series B}, \bold{66}, 815--850. 
 }
-\author{Ramon Diaz-Uriarte \email{rdiaz@ligarto.org}}
+\author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 \note{These plots resemble the scree plots commonly used with principal
   component analysis, and the actual choice of colors was taken from the
   importance spectrum plots of \cite{Friedman \& Meulman}.}

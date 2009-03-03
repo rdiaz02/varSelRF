@@ -87,13 +87,13 @@ varSelRFBoot(xdata, Class, c.sd = 1,
     run in original sample and the variables returned from a bootstrap
     sample.  Overlap between the sets of variables A and B is defined as
     \deqn{\frac{|variables.in.A \cap variables.in.B|}{\sqrt{|variables.in.A|
-	 |variables.in.B|}}} or {size (cardinality) of
+	 |variables.in.B|}}} or size (cardinality) of
        intersection between the two sets / sqrt(product of size of each
-       set)}.}
+       set).}
    \item{all.vars.in.solutions}{A vector with all the genes selected in
     the runs on all the bootstrap samples. If the same gene is selected in several
     bootstrap runs, it appears multiple times in this vector.}
-  \item {all.solutions}{Each solutions is a character vector with all
+  \item{all.solutions}{Each solutions is a character vector with all
     the variables in a particular solution concatenated by a "+". Thus,
     all.solutions is a vector, with length equal to
     \code{number.of.bootsamples}, of the solution from each bootstrap

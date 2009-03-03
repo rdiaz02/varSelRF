@@ -173,15 +173,19 @@ varSelRF <- function(xdata, Class,
     var.simplify <- TRUE
     
     while(var.simplify) {
-        print("gc inside loop of varSelRF")
-        print(gc())
+        if (verbose){
+          print("gc inside loop of varSelRF")
+          print(gc())
+        } else {
+          gc()
+        }
         
         ## last.rf <- rf; why do we do this?
         last.rf <- NULL
         last.vars <- selected.vars
         previous.m.error <- m.iterated.ob.error
         previous.sd.error <- sd.iterated.ob.error
-
+        
         if(recompute.var.imp & (j > 1)) {
             importances <- importance(rf, type = 1, scale = FALSE)
             tmp.order <- order(importances, decreasing = TRUE)
@@ -327,8 +331,8 @@ print.varSelRF <- function(x, ...) {
 
 #summary.varSelRF <- print.varSelRF
 
-plot.varSelRF <- function(x, nvar = NULL, ...) {
-    if(dev.interactive()) {
+plot.varSelRF <- function(x, nvar = NULL, which = c(1, 2), ...) {
+    if (length(which) == 2 && dev.interactive()) {
         op <- par(ask = TRUE, las = 1)
     } else {
         op <- par(las = 1)
@@ -339,28 +343,36 @@ plot.varSelRF <- function(x, nvar = NULL, ...) {
     if(is.null(nvar))
         nvar <- min(30,
                     length(x$initialOrderedImportances))
-  dotchart(rev(x$initialOrderedImportances[1:nvar]),
-           main = "Initial importances",
-           xlab = "Importances (unscaled)")
+    
+    show <- c(FALSE, FALSE)
+    show[which] <- TRUE
 
-    ylim <- c(0, max(0.50, x$selec.history$OOB))
-  plot(x$selec.history$Number.Variables,
-       x$selec.history$OOB, type = "b",
-       xlab = "Number of variables used",
-       ylab = "OOB error", log = "x",
-       ylim = ylim,
-       ...)
-
-##  if(max(x$selec.history$Number.Variables) > 300)
-##      axis(1, at = c(1, 2, 3, 5, 8, 15, 25, 50, 75, 150, 200, 300),
-##           labels = c(1, 2, 3, 5, 8, 15, 25, 50, 75, 150, 200, 300))
-  
-  lines(x$selec.history$Number.Variables,
-        x$selec.history$OOB +
-        2 * x$selec.history$sd.OOB, lty = 2)
-  lines(x$selec.history$Number.Variables,
-        x$selec.history$OOB -
-        2 * x$selec.history$sd.OOB, lty = 2)
+    if (show[1]){
+      dotchart(rev(x$initialOrderedImportances[1:nvar]),
+          main = "Initial importances",
+          xlab = "Importances (unscaled)")
+    }
+    
+    if (show[2]){
+      ylim <- c(0, max(0.50, x$selec.history$OOB))
+      plot(x$selec.history$Number.Variables,
+          x$selec.history$OOB, type = "b",
+          xlab = "Number of variables used",
+          ylab = "OOB error", log = "x",
+          ylim = ylim,
+          ...)
+      
+      ##  if(max(x$selec.history$Number.Variables) > 300)
+      ##      axis(1, at = c(1, 2, 3, 5, 8, 15, 25, 50, 75, 150, 200, 300),
+      ##           labels = c(1, 2, 3, 5, 8, 15, 25, 50, 75, 150, 200, 300))
+      
+      lines(x$selec.history$Number.Variables,
+          x$selec.history$OOB +
+              2 * x$selec.history$sd.OOB, lty = 2)
+      lines(x$selec.history$Number.Variables,
+          x$selec.history$OOB -
+              2 * x$selec.history$sd.OOB, lty = 2)
+    }
 }
   
 ## We could also write a varSelRFCV zz: move al TODO
@@ -541,8 +553,12 @@ varSelRFBoot <- function(xdata, Class,
     ## and the non-cluster is slow for other reasons.
     
     if(usingCluster) {
-        print("gc inside varSelRFBoot papply")
-        print(gc())
+        if (verbose){
+          print("gc inside varSelRFBoot papply")
+          print(gc())
+        } else {
+          gc()
+        }
         
         clusterEvalQ(TheCluster,
                      rm(list = c("xdataTheCluster", "ClassTheCluster")))
@@ -649,7 +665,7 @@ varSelRFBoot <- function(xdata, Class,
     
     r <- (one - resubst)/(gamma - resubst)
     r <- ifelse(one > resubst & gamma > resubst, r, 0)
-    if((r > 1) | (r < 0)) { ## just debugging; eliminar más adelante
+    if((r > 1) | (r < 0)) { ## just debugging; eliminar mï¿½s adelante
         print(paste("r outside of 0, 1 bounds: one", one,
                     "resubst", resubst, "gamma", gamma))
         if(r > 1) {

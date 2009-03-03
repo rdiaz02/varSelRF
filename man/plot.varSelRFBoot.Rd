@@ -1,18 +1,16 @@
 \name{plot.varSelRFBoot}
 \alias{plot.varSelRFBoot}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{plot a varSelRFBoot object}
 \description{
   Plots of out-of-bag predictions and OOB error vs. number of variables.
 }
 \usage{
-plot.varSelRFBoot(x,  oobProb = TRUE,
+\method{plot}{varSelRFBoot}(x,  oobProb = TRUE,
                   oobProbBoxPlot = FALSE,
                   ErrorNum = TRUE,
                   subject.names = NULL,
                   class.to.plot = NULL,...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class varSelRFBoot, such as returned by
     function \code{\link{varSelRFBoot}}.}

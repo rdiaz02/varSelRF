@@ -5,11 +5,10 @@
   Returns error rate and stability measures of a varSelRFBoot object.
 }
 \usage{
-summary.varSelRFBoot(object, return.model.freqs = FALSE,
+\method{summary}{varSelRFBoot}(object, return.model.freqs = FALSE,
                      return.class.probs = TRUE,
                      return.var.freqs.b.models = TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{An object of class varSelRFBoot, as returned from
   \code{\link{varSelRFBoot}}.}

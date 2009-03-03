@@ -1,3 +1,9 @@
+0.7:
+- Added patches from Tobias Verbeke for (all changes from 0.6-5
+   to 0.7 are Tobias's credit):
+   a) gc output hidden when not verbose
+   b) type argument to plot.varSelRF
+
 0.6:
 - Much more testing (with geneSrF application)
 - Fixed bug in varSelRF when passing an already fitted forest.

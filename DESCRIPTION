@@ -1,9 +1,9 @@
 Package: varSelRF
-Version: 0.6-5
-Date: 2008-04-17
+Version: 0.7-1
+Date: 2009-03-03
 Title: Variable selection using random forests
-Author: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
-Maintainer: Ramon Diaz-Uriarte <rdiaz@ligarto.org>
+Author: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
+Maintainer: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Depends: R (>= 2.0.0), randomForest
 Suggests: snow, Rmpi
 Description: Variable selection from random forests
