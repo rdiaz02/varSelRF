@@ -389,6 +389,7 @@ varSelRFBoot <- function(xdata, Class,
                          usingCluster = TRUE,
                          TheCluster = NULL,
                          srf = NULL,
+                         verbose = TRUE,
                          ...) {
     
     ## beware there is a lot of data copying... pass by reference, or
@@ -405,7 +406,7 @@ varSelRFBoot <- function(xdata, Class,
       }
     if(usingCluster & !is.null(TheCluster)) {
       cat("\n Using as cluster ", deparse(substitute(TheCluster)))
-      if(!length(find(TheCluster)))
+      if(!length(find(deparse(substitute(TheCluster)))))
           stop("\nOoops, but", TheCluster, "does not yet exist.\n",
                "Please create it using basicClusterInit.")
     }
@@ -416,9 +417,9 @@ varSelRFBoot <- function(xdata, Class,
       test.presence2 <-
         clusterEvalQ(TheCluster,
                      length(find("ClassTheCluster")))
-      if(any(test.presence1))
+      if(any(as.logical(unlist(test.presence1))))
         stop("At least one slave node has an object called xdataTheCluster")
-      if(any(test.presence2))
+      if(any(as.logical(unlist(test.presence2))))
         stop("At least one slave node has an object called ClassTheCluster")
 ##      clusterExport(TheCluster, c("varSelRF"))
     }
@@ -951,9 +952,9 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
   }
   if(usingCluster & !is.null(TheCluster)) {
     print(paste("Using as cluster ", deparse(substitute(TheCluster))))
-    if(!length(find(TheCluster)))
-        stop("\nOoops, but", TheCluster, "does not yet exist.\n",
-             "Please create it using basicClusterInit.")
+    if(!length(find(deparse(substitute(TheCluster)))))
+      stop("\nOoops, but", TheCluster, "does not yet exist.\n",
+           "Please create it using basicClusterInit.")
   }
 
   if(usingCluster) {
@@ -963,9 +964,9 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
     test.presence2 <-
       clusterEvalQ(TheCluster,
                    length(find("ClassTheCluster")))
-    if(any(test.presence1))
+    if(any(as.logical(unlist(test.presence1))))
       stop("At least one slave node has an object called xdataTheCluster")
-    if(any(test.presence2))
+    if(any(as.logical(unlist(test.presence2))))
       stop("At least one slave node has an object called ClassTheCluster")
 ###    clusterExport(TheCluster,  )
   }

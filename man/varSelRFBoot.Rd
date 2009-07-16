@@ -13,7 +13,7 @@ varSelRFBoot(xdata, Class, c.sd = 1,
              whole.range = TRUE,
              recompute.var.imp = FALSE,
              usingCluster = TRUE,
-             TheCluster = NULL, srf = NULL, ...)
+             TheCluster = NULL, srf = NULL, verbose = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{Most arguments are the same as for \code{\link{varSelRFBoot}}.
@@ -49,6 +49,7 @@ varSelRFBoot(xdata, Class, c.sd = 1,
     arguments to this function. If used, it allows to skip carrying out
     a first iteration to build the random forest to the complete,
     original data set.}
+  \item{verbose}{Give more information about what is being done.}
   \item{\dots}{Not used.}
 }
 \details{

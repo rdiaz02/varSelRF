@@ -1,3 +1,7 @@
+0.7-2:
+- Fixed warnings and a bug with "verbose" argument.
+- More careful usage of "find".
+
 0.7:
 - Added patches from Tobias Verbeke for (all changes from 0.6-5
    to 0.7 are Tobias's credit):
