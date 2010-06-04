@@ -180,11 +180,32 @@ varSelRF <- function(xdata, Class,
           gc()
         }
         
-        ## last.rf <- rf; why do we do this?
-        last.rf <- NULL
+        last.rf <- rf 
         last.vars <- selected.vars
         previous.m.error <- m.iterated.ob.error
         previous.sd.error <- sd.iterated.ob.error
+
+        ## If this is left as only
+        ## "if(length(selected.vars) <= 2) var.simplify <- FALSE"
+        ## under the if((length(selected.vars) < 2) | (any(selected.vars < 1))),
+        ## as it used to be, then we fit a 2 model var, which might be
+        ## better or as good as others, but as we never re-enter,
+        ## we cannot return it, even if we see it in the history.
+
+        ## Alternatively, we cannot just convert
+        ## "if((length(selected.vars) < 2) | (any(selected.vars < 1))"
+        ## to the <= 2, as we then would re-enter many times because
+        ## of the way selected.vars <- selected.vars[1:2] when
+        ## num.vars < (vars.drop + 2)
+
+        ## This way, we enter just to set last.rf, last.vars and
+        ## we bail out
+        
+        if(length(selected.vars) <= 2) {
+          var.simplify <- FALSE
+          break
+        }
+
         
         if(recompute.var.imp & (j > 1)) {
             importances <- importance(rf, type = 1, scale = FALSE)
@@ -214,7 +235,7 @@ varSelRF <- function(xdata, Class,
             break
         }
         
-        if(length(selected.vars) <= 2) var.simplify <- FALSE
+        
         
         mtry <- floor(sqrt(length(selected.vars)) * mtryFactor)
         if(mtry > length(selected.vars)) mtry <- length(selected.vars)
@@ -238,7 +259,9 @@ varSelRF <- function(xdata, Class,
         if(verbose) {
             print(paste("..... iteration ", j, "; OOB error: mean = ",
                         round(m.iterated.ob.error, 4),
-                        "; sd = ", round(sd.iterated.ob.error, 4), sep = ""))
+                        "; sd = ", round(sd.iterated.ob.error, 4),
+                        "; num. vars = ", length(selected.vars), 
+                        sep = ""))
         }
         j <- j + 1
         
@@ -279,7 +302,9 @@ varSelRF <- function(xdata, Class,
                     initialImportances = initialImportances,
                     initialOrderedImportances = initialOrderedImportances,
                     ntree = ntree,
-                    mtry = mtry,
+                    ntreeIterat = ntreeIterat,
+                    mtryFactor = mtryFactor,
+#                    mtry = mtry,
                     firstForest = FirstForest)
         class(out) <- "varSelRF"
         return(out)

@@ -40,7 +40,7 @@ rsprng. You might also need to start your cluster environment (e.g.,
 \references{\url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}}
 \author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 \note{ It is a lot better if you specify all arguments: if you really
-  have a netwrok of workstations you can use, you will need to specify
+  have a network of workstations you can use, you will need to specify
   the number of nodes and the correct type of cluster (MPI or PVM). If
   you don't have a network of workstations then nothing is gained (and a
   little bit lost) from asking  the functions in this package to use the
@@ -54,10 +54,11 @@ rsprng. You might also need to start your cluster environment (e.g.,
   the code should be straightfoward (see \code{\link[snow]{clusterSetupRNG}}).
 }
 
+\seealso{ \code{\link[snow]{makeCluster}}, \code{\link{randomVarImpsRF}},
+  \code{\link{varSelRFBoot}}
+}
+ 
 
-\seealso{ \code{\link[snow]{makeCluster}}, \code{\link{randomVarImpsRF},
-    \code{\link{varSelRFBoot}}}
-  }
 \examples{
 ## Create a simple cluster with only one slave node. Will work even
 ## in 1 CPU cases if you have the required packages.

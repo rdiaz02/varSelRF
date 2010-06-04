@@ -1,6 +1,9 @@
 0.7-2:
 - Fixed warnings and a bug with "verbose" argument.
 - More careful usage of "find".
+- Fixed a bug when selected variables = 2 and that was best model
+- Fixed bugs in help files
+- rf.model was not being return (pointed out by Augustin Luna)
 
 0.7:
 - Added patches from Tobias Verbeke for (all changes from 0.6-5

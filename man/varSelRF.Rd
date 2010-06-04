@@ -86,12 +86,12 @@ varSelRF(xdata, Class, c.sd = 1, mtryFactor = 1, ntree = 5000,
 \value{An object of class "varSelRF": a list with components:
   \item{selec.history}{A data frame where the selection history is
     stored. The components are:
-   \itemize{ 
-    \item{Number.Variables}{The number of variables examined.}
-    \item{Vars.in.Forest}{The actual variables that were in the forest
-      at that stage.}
-    \item{OOB}{Out of bag error rate.}
-    \item{sd.OOB}{Standard deviation of the error rate.}
+    \describe{
+      \item{Number.Variables}{The number of variables examined.}
+      \item{Vars.in.Forest}{The actual variables that were in the forest
+	at that stage.}
+      \item{OOB}{Out of bag error rate.}
+      \item{sd.OOB}{Standard deviation of the error rate.}
     }
   }
   \item{rf.model}{The final, selected, random forest (only if

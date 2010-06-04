@@ -1,6 +1,6 @@
 Package: varSelRF
 Version: 0.7-2
-Date: 2009-07-16
+Date: 2010-06-04
 Title: Variable selection using random forests
 Author: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Maintainer: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
