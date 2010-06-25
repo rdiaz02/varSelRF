@@ -12,7 +12,7 @@
 varSelRF(xdata, Class, c.sd = 1, mtryFactor = 1, ntree = 5000,
          ntreeIterat = 2000, vars.drop.num = NULL, vars.drop.frac = 0.2,
          whole.range = TRUE, recompute.var.imp = FALSE, verbose = FALSE,
-         returnFirstForest = TRUE, fitted.rf = NULL)
+         returnFirstForest = TRUE, fitted.rf = NULL, keep.forest = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -47,6 +47,10 @@ varSelRF(xdata, Class, c.sd = 1, mtryFactor = 1, ntree = 5000,
     randomForest previously fitted. In this case, the ntree and
     mtryFactor arguments are obtained from the fitted object, not the
     arguments to this function.}
+  \item{keep.forest}{Same argument as in randomForest function. If the
+    forest is kept, it will be returned as part of the "rf.model"
+    component of the output. Beware that setting this to TRUE can lead
+ to very large memory consumption.}
 }
 \details{
   With the default parameters, we examine all forest that result from

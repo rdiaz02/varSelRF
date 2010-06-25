@@ -95,7 +95,8 @@ varSelRF <- function(xdata, Class,
                      recompute.var.imp = FALSE,
                      verbose = FALSE,
                      returnFirstForest = TRUE,
-                     fitted.rf = NULL) {
+                     fitted.rf = NULL,
+                     keep.forest = FALSE) {
 
     if(!is.factor(Class))
         stop("Class should be a factor")
@@ -139,7 +140,7 @@ varSelRF <- function(xdata, Class,
         rf <- randomForest(x = xdata, y = Class,
                            ntree = ntree, mtry = mtry,
                            importance = TRUE,
-                           keep.forest = FALSE)
+                           keep.forest = keep.forest)
     }
     
     if(returnFirstForest)
@@ -244,12 +245,12 @@ varSelRF <- function(xdata, Class,
             rf <- randomForest(x = xdata[, selected.vars],
                                y = Class, importance= TRUE,
                                ntree = ntree, mtry = mtry,
-                               keep.forest = FALSE)
+                               keep.forest = keep.forest)
         else
             rf <- randomForest(x = xdata[, selected.vars],
                                y = Class, importance= FALSE,
                                ntree = ntreeIterat, mtry = mtry,
-                               keep.forest = FALSE)
+                               keep.forest = keep.forest)
         
         m.iterated.ob.error <- oobError(rf)
         sd.iterated.ob.error <-
