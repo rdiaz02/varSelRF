@@ -1,5 +1,7 @@
-0.7-3:
-- keep.forest option to varSelRF
+0.7-3 (2010-10-28):
+- Rmpi is now under "Enhances", to allow checks under Windows
+- keep.forest option to varSelRF and examples on obtaining predictions
+  (thanks to Wei Hu and Alexander V. Loguinov for pointing these issues)
 
 0.7-2:
 - Fixed warnings and a bug with "verbose" argument.

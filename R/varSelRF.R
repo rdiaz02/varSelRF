@@ -56,7 +56,8 @@ basicClusterInit <- function(clusterNumberNodes = 1,
   if(!(typeCluster %in% c("MPI", "PVM"))) stop("typeCluster needs to be PVM or MPI")
   library(snow)
   if(typeCluster == "MPI") {
-      library(Rmpi)
+    print("Make sure you have the Rmpi package installed and configure your cluster if needed")
+    ## library(Rmpi)
   }
   if(typeCluster == "PVM") {
       print("Make sure you have rpvm installed. We have only checked with Rmpi. Then do library(rpvm)")

@@ -1,11 +1,12 @@
 Package: varSelRF
 Version: 0.7-3
-Date: 2010-06-09
+Date: 2010-10-28
 Title: Variable selection using random forests
 Author: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Maintainer: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Depends: R (>= 2.0.0), randomForest
-Suggests: snow, Rmpi
+Suggests: snow
+Enhances: Rmpi
 Description: Variable selection from random forests using both
         backwards variable elimination (for the selection of small sets
         of non-redundant variables) and selection based on the
