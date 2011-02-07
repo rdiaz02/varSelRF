@@ -1,1 +1,94 @@
 - Allow usage of socket clusters
+
+- names of variables in plot:
+
+
+from	Ramon Diaz-Uriarte <rdiaz02@gmail.com>
+to	Xiaowei Guan <xxg39@case.edu>
+date	Mon, Feb 7, 2011 at 11:31 AM
+subject	Re: question about the "varSelRF" importance plot
+mailed-by	gmail.com
+	
+hide details 11:31 AM (1 minute ago)
+	
+Dear Xiaowei,
+
+Right now, no, there is no direct way to get those names in the plot.
+Let me ellaborate:
+
+a) In the second plot (OOB error vs. number of variables) that would
+not make sense (since its not individual variables that are plotted).
+
+b) In the first plot, we are plotting just the importances of the very
+first forest. That is something you could get from the usual random
+forest, as you show.
+
+c) b) is really not a very statisfactory answer. It should be easy to
+modify the code of plot.varSelRF, because we just do a simple call
+
+> varSelRF:::plot.varSelRF
+function (x, nvar = NULL, which = c(1, 2), ...)
+{
+   if (length(which) == 2 && dev.interactive()) {
+       op <- par(ask = TRUE, las = 1)
+   }
+   else {
+       op <- par(las = 1)
+   }
+   on.exit(par(op))
+   if (is.null(nvar))
+       nvar <- min(30, length(x$initialOrderedImportances))
+   show <- c(FALSE, FALSE)
+   show[which] <- TRUE
+   if (show[1]) {
+       dotchart(rev(x$initialOrderedImportances[1:nvar]), main =
+"Initial importances",
+           xlab = "Importances (unscaled)")
+   }
+   if (show[2]) {
+       ylim <- c(0, max(0.5, x$selec.history$OOB))
+       plot(x$selec.history$Number.Variables, x$selec.history$OOB,
+           type = "b", xlab = "Number of variables used", ylab = "OOB error",
+           log = "x", ylim = ylim, ...)
+       lines(x$selec.history$Number.Variables, x$selec.history$OOB +
+           2 * x$selec.history$sd.OOB, lty = 2)
+       lines(x$selec.history$Number.Variables, x$selec.history$OOB -
+           2 * x$selec.history$sd.OOB, lty = 2)
+   }
+}
+<environment: namespace:varSelRF>
+
+
+
+So we could just modify the call to dotchart, to add labels.
+
+I'll try to incorporate it in the next release. For now, however, you
+can either use random forest directly, or modify the code.
+
+
+Best,
+
+R.
+- Hide quoted text -
+
+On Fri, Feb 4, 2011 at 10:28 PM, Xiaowei Guan <xxg39@case.edu> wrote:
+> Dear Dr. Ramon Diaz-Uriarte,
+>
+> I am a PhD student at Case Western Reserve University. Currently, I am using
+> the package to select a compact set of gene to distinguish between
+> genotypes. I am using the command of varSelRF, after I ran the code, I would
+> like to plot it using plot.varSelRF, while for the importance plot, there
+> are not variable names only the dots, is there a way to get the information
+> of the variable names?
+>
+> For the package "randomForest", after running the code randomforest, then
+> when I plot it, it will give me the variable names that is important.....
+> Please see the attachment plots comparison.
+>
+> Thanks very much for your help. Have a good weekend!
+>
+> best,
+> Xiaowei
+>
+
+
