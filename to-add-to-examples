@@ -1,0 +1,44 @@
+library(varSelRF)
+library(snow)
+basicClusterInit(clusterNumberNodes = 2,
+                 nameCluster = "TheCluster",
+                 typeCluster = "MPI")
+
+x <- matrix(rnorm(25 * 30), ncol = 30)
+x[1:10, 1:2] <- x[1:10, 1:2] + 2
+cl <- factor(c(rep("A", 10), rep("B", 15)))  
+
+rf.vs1 <- varSelRF(x, cl, ntree = 200, ntreeIterat = 100,
+                   vars.drop.frac = 0.2)
+rf.vsb <- varSelRFBoot(x, cl,
+                       bootnumber = 10,
+                       TheCluster = TheCluster,
+                       usingCluster = TRUE,
+                       srf = rf.vs1)
+rf.vsb
+summary(rf.vsb)
+
+
+############ Another one
+
+
+library(varSelRF)
+library(snow)
+basicClusterInit(clusterNumberNodes = 2,
+                 nameCluster = "AnotherCluster",
+                 typeCluster = "MPI")
+
+x <- matrix(rnorm(25 * 30), ncol = 30)
+x[1:10, 1:2] <- x[1:10, 1:2] + 2
+cl <- factor(c(rep("A", 10), rep("B", 15)))  
+
+rf.vs1 <- varSelRF(x, cl, ntree = 200, ntreeIterat = 100,
+                   vars.drop.frac = 0.2)
+rf.vsb <- varSelRFBoot(x, cl,
+                       bootnumber = 10,
+                       TheCluster = AnotherCluster,
+                       usingCluster = TRUE,
+                       srf = rf.vs1)
+rf.vsb
+summary(rf.vsb)
+
