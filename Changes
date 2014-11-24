@@ -1,3 +1,9 @@
+0.7-4 (2014-11-24):
+- Removed To-do to conform to CRAN
+- Fixed some other notes and commented not currently used code
+- Placed in github
+
+
 0.7-3 (2010-10-28):
 - Rmpi is now under "Enhances", to allow checks under Windows
 - keep.forest option to varSelRF and examples on obtaining predictions

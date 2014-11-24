@@ -1,7 +1,7 @@
 Package: varSelRF
-Version: 0.7-3
-Date: 2010-10-28
-Title: Variable selection using random forests
+Version: 0.7-4
+Date: 2014-11-24
+Title: Variable Selection using Random Forests
 Author: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Maintainer: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Depends: R (>= 2.0.0), randomForest
@@ -19,7 +19,8 @@ Description: Variable selection from random forests using both
 LazyLoad: Yes
 License: GPL (>= 2)
 URL: http://ligarto.org/rdiaz/Software/Software.html,
-http: //ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html
+     http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html,
+     https://github.com/rdiaz02/varSelRF
 Repository: CRAN
 Date/Publication: 2010-06-04 13:24:22
 Packaged: 2010-06-09 17:06:03 UTC; ramon
