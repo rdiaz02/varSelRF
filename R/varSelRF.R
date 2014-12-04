@@ -46,42 +46,50 @@
 ## require(randomForest)
 
 
-basicClusterInit <- function(clusterNumberNodes = 1,
-                             nameCluster = "TheCluster",
-                             typeCluster = "MPI") {
-    ## Initialize a cluster
-  ## Note that Rmpi already checks if another cluster is up and running,
-  ## so we do not need to do that.
+## clusters make sense in varSelRFBoot and
+## randomVarImpsRF
+## varSelImpSpecRF
 
-  if(!(typeCluster %in% c("MPI", "PVM"))) stop("typeCluster needs to be PVM or MPI")
-  library(snow)
-  if(typeCluster == "MPI") {
-    print("Make sure you have the Rmpi package installed and configure your cluster if needed")
-    ## library(Rmpi)
-  }
-  if(typeCluster == "PVM") {
-      print("Make sure you have rpvm installed. We have only checked with Rmpi. Then do library(rpvm)")
-  }
-  if(length(find(nameCluster)))
-      stop("\nThere is another object called ", nameCluster,".\n",
-           "This could mean that a cluster with that name already exists;\n",
-           "   in this case, please use the existing cluster \n",
-           "   ---you do not need to initialize the cluster, \n",
-           "   just pass its name as the parameter for 'nameCluster'---\n",
-           "   or stop that cluster and initialize a new one. \n",
-           "It could also mean that there is\n",
-           "   already an object with this name; either remove the object\n",
-           "   or use another name for the cluster.\n")
-  assign(nameCluster,
-         makeCluster(clusterNumberNodes,
-                     type = typeCluster),
-         envir = .GlobalEnv)    
-  sprng.seed <- round(2^32 * runif(1))
-  print(paste("Using as seed for SPRNG", sprng.seed))
-  clusterSetupSPRNG(eval(parse(text = nameCluster)), seed = sprng.seed)
-  ## clusterEvalQ(eval(parse(text = nameCluster)), library(randomForest))
-  clusterEvalQ(eval(parse(text = nameCluster)), library(varSelRF))
-}
+
+## basicClusterInit <- function(clusterNumberNodes = 1,
+##                              nameCluster = "TheCluster",
+##                              typeCluster = "MPI") {
+##     ## Initialize a cluster
+##   ## Note that Rmpi already checks if another cluster is up and running,
+##   ## so we do not need to do that.
+
+##   if(!(typeCluster %in% c("MPI", "PVM"))) stop("typeCluster needs to be PVM or MPI")
+##   library(snow)
+##   if(typeCluster == "MPI") {
+##     print("Make sure you have the Rmpi package installed and configure your cluster if needed")
+##     ## library(Rmpi)
+##   }
+##   if(typeCluster == "PVM") {
+##       print("Make sure you have rpvm installed. We have only checked with Rmpi. Then do library(rpvm)")
+##   }
+##   if(length(find(nameCluster)))
+##       stop("\nThere is another object called ", nameCluster,".\n",
+##            "This could mean that a cluster with that name already exists;\n",
+##            "   in this case, please use the existing cluster \n",
+##            "   ---you do not need to initialize the cluster, \n",
+##            "   just pass its name as the parameter for 'nameCluster'---\n",
+##            "   or stop that cluster and initialize a new one. \n",
+##            "It could also mean that there is\n",
+##            "   already an object with this name; either remove the object\n",
+##            "   or use another name for the cluster.\n")
+##   assign(nameCluster,
+##          makeCluster(clusterNumberNodes,
+##                      type = typeCluster),
+##          envir = .GlobalEnv)    
+##   rng.seed <- round(2^32 * runif(1))
+##   print(paste("Using as seed for RNG", rng.seed))
+##   clusterSetRNGStream(eval(parse(text = nameCluster)), iseed = rng.seed)
+##   ## clusterEvalQ(eval(parse(text = nameCluster)), library(randomForest))
+##   clusterEvalQ(eval(parse(text = nameCluster)), library(varSelRF))
+## }
+
+
+
 
 
 
@@ -1004,7 +1012,51 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
   nodesize <- 1
   
   if(usingCluster) {
-      iRF.cluster <- function(dummy, ontree, omtry, nodesize, ...) {
+    ##   iRF.cluster <- function(dummy, ontree, omtry, nodesize, ...) {
+    ##     rf <- randomForest(x = xdataTheCluster,
+    ##                        y = sample(ClassTheCluster),
+    ##                        ntree = ontree,
+    ##                        mtry = omtry,
+    ##                        nodesize = nodesize,
+    ##                        importance = TRUE, keep.forest = FALSE,
+    ##                        ...)
+    ##     ## If we specify the importance measure, only that var is evaluated.
+    ##     ## if we say "ALL", all three.
+    ##     impsScaled <- NULL
+    ##     impsUnscaled <- NULL
+    ##     impsGini <- NULL
+    ##     if("impsUnscaled" %in% whichImp) 
+    ##       impsUnscaled <- importance(rf, type = 1, scale = FALSE)
+    ##     if("impsScaled" %in% whichImp)
+    ##       impsScaled <- importance(rf, type = 1, scale = TRUE)
+    ##     if("impsGini" %in% whichImp)
+    ##       impsGini <- rf$importance[, ncol(rf$importance)]
+        
+    ##     return(list(impsScaled,
+    ##                 impsUnscaled,
+    ##                 impsGini))
+    ## }
+
+
+      ## clusterEvalQ(TheCluster,
+      ##              rm(list = c("xdataTheCluster", "ClassTheCluster")))
+      ## xdataTheCluster <<- xdata
+      ## ClassTheCluster <<- Class
+      ## clusterExport(TheCluster,
+      ##               c("xdataTheCluster", "ClassTheCluster"))
+      ## cat("\n Obtaining random importances using cluster (might take a while)\n")
+      ## outCl <- clusterApplyLB(TheCluster,
+      ##                         1:numrandom,
+      ##                         iRF.cluster,
+      ##                         ontree = ontree,
+      ##                         omtry = omtry,
+      ##                         nodesize = nodesize)
+      ## clusterEvalQ(TheCluster,
+      ##              rm(list = c("xdataTheCluster", "ClassTheCluster")))
+
+
+      iRF2.cluster <- function(xdataTheCluster, ClassTheCluster,
+                               dummy, ontree, omtry, nodesize, ...) {
         rf <- randomForest(x = xdataTheCluster,
                            y = sample(ClassTheCluster),
                            ntree = ontree,
@@ -1028,21 +1080,17 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
                     impsUnscaled,
                     impsGini))
     }
-      clusterEvalQ(TheCluster,
-                   rm(list = c("xdataTheCluster", "ClassTheCluster")))
-      xdataTheCluster <<- xdata
-      ClassTheCluster <<- Class
-      clusterExport(TheCluster,
-                    c("xdataTheCluster", "ClassTheCluster"))
-      cat("\n Obtaining random importances using cluster (might take a while)\n")
+      
       outCl <- clusterApplyLB(TheCluster,
                               1:numrandom,
-                              iRF.cluster,
+                              iRF2.cluster,
+                              xdataTheCluster = xdata,
+                              ClassTheCluster = Class,
                               ontree = ontree,
                               omtry = omtry,
                               nodesize = nodesize)
-      clusterEvalQ(TheCluster,
-                   rm(list = c("xdataTheCluster", "ClassTheCluster")))
+
+
       
   } else {
       outCl <- list()

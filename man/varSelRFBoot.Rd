@@ -146,6 +146,12 @@ varSelRFBoot(xdata, Class, c.sd = 1,
 \dontrun{
 ## This is a small example, but can take some time.
 
+## make a small cluster, for the sake of illustration
+cl <- makeCluster(2, "PSOCK")
+clusterSetRNGStream(cl, iseed = 123)
+clusterEvalQ(cl, library(varSelRF))
+
+
 x <- matrix(rnorm(25 * 30), ncol = 30)
 x[1:10, 1:2] <- x[1:10, 1:2] + 2
 cl <- factor(c(rep("A", 10), rep("B", 15)))  
@@ -155,7 +161,8 @@ rf.vs1 <- varSelRF(x, cl, ntree = 200, ntreeIterat = 100,
 rf.vsb <- varSelRFBoot(x, cl,
                        bootnumber = 10,
                        usingCluster = FALSE,
-                       srf = rf.vs1)
+                       srf = rf.vs1,
+                       TheCluster = cl)
 rf.vsb
 summary(rf.vsb)
 plot(rf.vsb)
