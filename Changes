@@ -1,3 +1,9 @@
+0.7-5 (2014-12-05):
+- No longer using snow
+- Added clusters to examples
+- Cleaned code of global env objects in cluster calls
+
+
 0.7-4 (2014-11-24):
 - Removed To-do to conform to CRAN
 - Fixed some other notes and commented not currently used code
