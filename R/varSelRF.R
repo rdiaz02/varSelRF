@@ -1,95 +1,6 @@
 #### watch out use of "..." inside Boot function
 
-
-#### the "<<-" in the parallelized stuff? The logic is:
-####    a) we could pass the arguments explicitly as part of
-####       clusterApplyLB but for those objects that means
-####       repeatedly passing to the same slave node
-####       (e.g., 200 bootstrap samples, and only 4 nodes)
-####       a very large object.
-
-####    b) using the "<<-" results in important speed savings
-####       at least in some tests I did.
-
-####    c) just in case, right before the "<<-" I delete all objects
-####       with same name;
-
-####    d) the user is unlikely to store objects of his/her own
-####       creation in the slave nodes; thus, one of the biggest
-####       problems of "<<-" disappears.
-
-####    However, just in case we:
-####       e.1. Use an unlikely name
-####       e.2. Verify, when the cluster is initialized, that there is no
-####            object in any node with that name, and refuse to run unless
-####            the problem is fixed.
-
-
-
 #####   in bootSimplifyRF maybe allow allBootRuns = NULL so that object is small.
-
-
-
-####usingCluster <- TRUE
-####if(usingCluster) {
-####    library(snow)
-####    library(Rmpi)
-####    clusterNumberNodes <- 1
-####    typeCluster <- "MPI"
-####    TheCluster <- makeCluster(clusterNumberNodes,
-####                              type = typeCluster)
-####    clusterSetupSPRNG(TheCluster, seed = as.numeric(Sys.time()))
-####    clusterEvalQ(TheCluster, library(randomForest))
-####}
-
-
-## require(randomForest)
-
-
-## clusters make sense in varSelRFBoot and
-## randomVarImpsRF
-## varSelImpSpecRF
-
-
-## basicClusterInit <- function(clusterNumberNodes = 1,
-##                              nameCluster = "TheCluster",
-##                              typeCluster = "MPI") {
-##     ## Initialize a cluster
-##   ## Note that Rmpi already checks if another cluster is up and running,
-##   ## so we do not need to do that.
-
-##   if(!(typeCluster %in% c("MPI", "PVM"))) stop("typeCluster needs to be PVM or MPI")
-##   library(snow)
-##   if(typeCluster == "MPI") {
-##     print("Make sure you have the Rmpi package installed and configure your cluster if needed")
-##     ## library(Rmpi)
-##   }
-##   if(typeCluster == "PVM") {
-##       print("Make sure you have rpvm installed. We have only checked with Rmpi. Then do library(rpvm)")
-##   }
-##   if(length(find(nameCluster)))
-##       stop("\nThere is another object called ", nameCluster,".\n",
-##            "This could mean that a cluster with that name already exists;\n",
-##            "   in this case, please use the existing cluster \n",
-##            "   ---you do not need to initialize the cluster, \n",
-##            "   just pass its name as the parameter for 'nameCluster'---\n",
-##            "   or stop that cluster and initialize a new one. \n",
-##            "It could also mean that there is\n",
-##            "   already an object with this name; either remove the object\n",
-##            "   or use another name for the cluster.\n")
-##   assign(nameCluster,
-##          makeCluster(clusterNumberNodes,
-##                      type = typeCluster),
-##          envir = .GlobalEnv)    
-##   rng.seed <- round(2^32 * runif(1))
-##   print(paste("Using as seed for RNG", rng.seed))
-##   clusterSetRNGStream(eval(parse(text = nameCluster)), iseed = rng.seed)
-##   ## clusterEvalQ(eval(parse(text = nameCluster)), library(randomForest))
-##   clusterEvalQ(eval(parse(text = nameCluster)), library(varSelRF))
-## }
-
-
-
 
 
 
@@ -430,35 +341,6 @@ varSelRFBoot <- function(xdata, Class,
     ## beware there is a lot of data copying... pass by reference, or
     ## minimize copying or something.
     
-##     if(usingCluster & is.null(TheCluster)) {
-##         stop("You have requested a cluster passed")
-##         basicClusterInit()
-##         warning("Initializing a one-slave MPI cluster called \"TheCluster\"\n",
-##                 "For more control, pass the name for the cluster, \n",
-##                 "after initializing with basicClusterInit.\n",
-##                 "It is much, much better if you explicitly set the parameters\n",
-##                 "you want for your cluster (name, type, and number of nodes)\n",
-##                 immediate.= TRUE)
-##       }
-##     if(usingCluster & !is.null(TheCluster)) {
-##       cat("\n Using as cluster ", deparse(substitute(TheCluster)))
-##       if(!length(find(deparse(substitute(TheCluster)))))
-##           stop("\nOoops, but", TheCluster, "does not yet exist.\n",
-##                "Please create it using basicClusterInit.")
-##     }
-##     if(usingCluster) {
-##       test.presence1 <-
-##         clusterEvalQ(TheCluster,
-##                      length(find("xdataTheCluster")))
-##       test.presence2 <-
-##         clusterEvalQ(TheCluster,
-##                      length(find("ClassTheCluster")))
-##       if(any(as.logical(unlist(test.presence1))))
-##         stop("At least one slave node has an object called xdataTheCluster")
-##       if(any(as.logical(unlist(test.presence2))))
-##         stop("At least one slave node has an object called ClassTheCluster")
-## ##      clusterExport(TheCluster, c("varSelRF"))
-##     }
 
     if(is.null(colnames(xdata)))
         colnames(xdata) <- paste("v", 1:dim(xdata)[2], sep ="")
@@ -599,12 +481,6 @@ varSelRFBoot <- function(xdata, Class,
           gc()
         }
         
-        ## clusterEvalQ(TheCluster,
-        ##              rm(list = c("xdataTheCluster", "ClassTheCluster")))
-        ## xdataTheCluster <<- xdata
-        ## ClassTheCluster <<- Class
-        ## clusterExport(TheCluster,
-        ##               c("xdataTheCluster", "ClassTheCluster"))
         cat("\n      Running bootstrap iterations using cluster (can take a while)\n")
         boot.runs <- clusterApplyLB(TheCluster,
                                     1:bootnumber,
@@ -768,7 +644,7 @@ print.varSelRFBoot <- function(x, ...) {
 
 ## zz: pass gene names and subject names??
 ## look at examples from ~/Proyectos/Signatures/Symposum/boot.pamr.knn.dlda.R
-## o similar bajo Gema Moreno
+## o similar 
 ## Or not, because I think I am ussing column names
 ## but look at that code anyway for improvements
 
@@ -983,35 +859,6 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
       stop("whichImp contains a non-valid option; should be one or more \n",
            "of impsScaled, impsUnscaled, impsGini")
 
-##   if(usingCluster & is.null(TheCluster)) {
-##       basicClusterInit()
-##       warning("Initializing a one-slave MPI cluster called \"TheCluster\"\n",
-##               "For more control, pass the name for the cluster, \n",
-##               "after initializing with basicClusterInit.\n",
-##               "It is much, much better if you explicitly set the parameters\n",
-##               "you want for your cluster (name, type, and number of nodes)\n",
-##               immediate. = TRUE)
-##   }
-##   if(usingCluster & !is.null(TheCluster)) {
-##     print(paste("Using as cluster ", deparse(substitute(TheCluster))))
-##     if(!length(find(deparse(substitute(TheCluster)))))
-##       stop("\nOoops, but", TheCluster, "does not yet exist.\n",
-##            "Please create it using basicClusterInit.")
-##   }
-
-##   if(usingCluster) {
-##     test.presence1 <-
-##       clusterEvalQ(TheCluster,
-##                    length(find("xdataTheCluster")))
-##     test.presence2 <-
-##       clusterEvalQ(TheCluster,
-##                    length(find("ClassTheCluster")))
-##     if(any(as.logical(unlist(test.presence1))))
-##       stop("At least one slave node has an object called xdataTheCluster")
-##     if(any(as.logical(unlist(test.presence2))))
-##       stop("At least one slave node has an object called ClassTheCluster")
-## ###    clusterExport(TheCluster,  )
-##   }
   
   ontree <- forest$ntree
   omtry <- forest$mtry
@@ -1019,49 +866,6 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
   nodesize <- 1
   
   if(usingCluster) {
-    ##   iRF.cluster <- function(dummy, ontree, omtry, nodesize, ...) {
-    ##     rf <- randomForest(x = xdataTheCluster,
-    ##                        y = sample(ClassTheCluster),
-    ##                        ntree = ontree,
-    ##                        mtry = omtry,
-    ##                        nodesize = nodesize,
-    ##                        importance = TRUE, keep.forest = FALSE,
-    ##                        ...)
-    ##     ## If we specify the importance measure, only that var is evaluated.
-    ##     ## if we say "ALL", all three.
-    ##     impsScaled <- NULL
-    ##     impsUnscaled <- NULL
-    ##     impsGini <- NULL
-    ##     if("impsUnscaled" %in% whichImp) 
-    ##       impsUnscaled <- importance(rf, type = 1, scale = FALSE)
-    ##     if("impsScaled" %in% whichImp)
-    ##       impsScaled <- importance(rf, type = 1, scale = TRUE)
-    ##     if("impsGini" %in% whichImp)
-    ##       impsGini <- rf$importance[, ncol(rf$importance)]
-        
-    ##     return(list(impsScaled,
-    ##                 impsUnscaled,
-    ##                 impsGini))
-    ## }
-
-
-      ## clusterEvalQ(TheCluster,
-      ##              rm(list = c("xdataTheCluster", "ClassTheCluster")))
-      ## xdataTheCluster <<- xdata
-      ## ClassTheCluster <<- Class
-      ## clusterExport(TheCluster,
-      ##               c("xdataTheCluster", "ClassTheCluster"))
-      ## cat("\n Obtaining random importances using cluster (might take a while)\n")
-      ## outCl <- clusterApplyLB(TheCluster,
-      ##                         1:numrandom,
-      ##                         iRF.cluster,
-      ##                         ontree = ontree,
-      ##                         omtry = omtry,
-      ##                         nodesize = nodesize)
-      ## clusterEvalQ(TheCluster,
-      ##              rm(list = c("xdataTheCluster", "ClassTheCluster")))
-
-
       iRF2.cluster <- function(dummy, xdataTheCluster, ClassTheCluster,
                                ontree, omtry, nodesize, ...) {
         rf <- randomForest(x = xdataTheCluster,

@@ -1,0 +1,8 @@
+/.Rbuildignore~
+/Changes~
+/DESCRIPTION~
+/NAMESPACE~
+/R/varSelRF.R~
+/man/randomVarImpsRFplot.Rd~
+/man/varSelImpSpecRF.Rd~
+/man/varSelRFBoot.Rd~

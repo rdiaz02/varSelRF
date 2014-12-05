@@ -101,6 +101,26 @@ rf.rvi <- randomVarImpsRF(x, cl,
                           usingCluster = FALSE) 
 varSelImpSpecRF(rf, randomImps = rf.rvi)
 
+
+
+\dontrun{
+## Identical, but using a cluster
+psockCL <- makeCluster(2, "PSOCK")
+clusterSetRNGStream(psockCL, iseed = 456)
+clusterEvalQ(psockCL, library(varSelRF))
+
+rf.rvi <- randomVarImpsRF(x, cl, 
+                          rf, 
+                          numrandom = 20, 
+                          usingCluster = TRUE,
+                          TheCluster = psockCL) 
+varSelImpSpecRF(rf, randomImps = rf.rvi)
+stopCluster(psockCL)
+
+}
+
+
+
 }
 \keyword{tree}% at least one, from doc/KEYWORDS
 \keyword{classif}% __ONLY ONE__ keyword per line

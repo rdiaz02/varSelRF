@@ -116,6 +116,26 @@ rf.rvi <- randomVarImpsRF(x, cl,
                           usingCluster = FALSE) 
 
 randomVarImpsRFplot(rf.rvi, rf)
+
+
+
+\dontrun{
+## identical, but using a cluster
+## make a small cluster, for the sake of illustration
+psockCL <- makeCluster(2, "PSOCK")
+clusterSetRNGStream(psockCL, iseed = 789)
+clusterEvalQ(psockCL, library(varSelRF))
+
+rf.rvi <- randomVarImpsRF(x, cl, 
+                          rf, 
+                          numrandom = 20, 
+                          usingCluster = TRUE,
+                          TheCluster = psockCL) 
+
+randomVarImpsRFplot(rf.rvi, rf)
+stopCluster(psockCL)
+}
+
 }
 \keyword{tree}% at least one, from doc/KEYWORDS
 \keyword{classif}% __ONLY ONE__ keyword per line
