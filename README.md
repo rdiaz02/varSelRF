@@ -18,3 +18,7 @@ for gene selection and classification using random forest." [BMC
 Bioinformatics, 8: 328](http://www.biomedcentral.com/1471-2105/7/3/abstract).
 
 
+License
+========
+
+GPL (>= 2)
