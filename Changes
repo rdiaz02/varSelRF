@@ -1,3 +1,7 @@
+0.7-6 (2015-07-06):
+- randomVarImpsRFplot was not showing names of variables.
+- getting Gini index using type (not position in output!)
+
 0.7-5 (2014-12-05):
 - No longer using snow
 - Added clusters to examples

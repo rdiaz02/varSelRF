@@ -107,6 +107,7 @@ randomVarImpsRFplot(randomImportances, forest,
 
 x <- matrix(rnorm(45 * 30), ncol = 30)
 x[1:20, 1:2] <- x[1:20, 1:2] + 2
+colnames(x) <- paste0("V", seq.int(ncol(x)))
 cl <- factor(c(rep("A", 20), rep("B", 25)))  
 
 rf <- randomForest(x, cl, ntree = 200, importance = TRUE)
@@ -116,7 +117,9 @@ rf.rvi <- randomVarImpsRF(x, cl,
                           usingCluster = FALSE) 
 
 randomVarImpsRFplot(rf.rvi, rf)
-
+op <- par(las = 2)
+randomVarImpsRFplot(rf.rvi, rf, show.var.names = TRUE)
+par(op)
 
 
 \dontrun{

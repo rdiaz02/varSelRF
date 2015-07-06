@@ -885,7 +885,8 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
         if("impsScaled" %in% whichImp)
           impsScaled <- importance(rf, type = 1, scale = TRUE)
         if("impsGini" %in% whichImp)
-          impsGini <- rf$importance[, ncol(rf$importance)]
+            impsGini <- importance(rf, type = 2, scale = TRUE)
+          ## impsGini <- rf$importance[, ncol(rf$importance)]
         
         return(list(impsScaled,
                     impsUnscaled,
@@ -919,12 +920,13 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
         impsScaled <- NULL
         impsUnscaled <- NULL
         impsGini <- NULL
-        if("impsUnscaled" %in% whichImp) 
-          impsUnscaled <- importance(rf, type = 1, scale = FALSE)
-        if("impsScaled" %in% whichImp)
-          impsScaled <- importance(rf, type = 1, scale = TRUE)
-        if("impsGini" %in% whichImp)
-          impsGini <- rf$importance[, ncol(rf$importance)]
+          if("impsUnscaled" %in% whichImp) 
+              impsUnscaled <- importance(rf, type = 1, scale = FALSE)
+          if("impsScaled" %in% whichImp)
+              impsScaled <- importance(rf, type = 1, scale = TRUE)
+          if("impsGini" %in% whichImp)
+              impsGini <- importance(rf, type = 2, scale = TRUE)
+          ## impsGini <- rf$importance[, ncol(rf$importance)]
         outCl[[nriter]] <- list(impsScaled,
                                 impsUnscaled,
                                 impsGini)
@@ -993,11 +995,12 @@ randomVarImpsRFplot <- function(randomImportances,
     originalForestImportance <-
         switch(whichImp,
                "impsUnscaled" =
-               importance(forest, type = 1, scale = FALSE),
+                   importance(forest, type = 1, scale = FALSE),
                "impsScaled" =
-               importance(forest, type = 1, scale = TRUE),
+                   importance(forest, type = 1, scale = TRUE),
                "impsGini" =
-               forest$importance[, ncol(forest$importance)]
+                   importance(forest, type = 2, scale = TRUE)
+               ## forest$importance[, ncol(forest$importance)]
                )
     if(is.null(originalForestImportance))
         stop("\n Not valid 'whichImp' \n")
@@ -1015,7 +1018,13 @@ randomVarImpsRFplot <- function(randomImportances,
     plottingOrder <- order(originalForestImportance,
                            decreasing = TRUE)[1:nvars]
 
-    orderedOriginalImps <- originalForestImportance[plottingOrder]
+    ## This is really (something changed in randomForest?) a matrix.
+    ## Explictily make it a vector
+    ## check first
+    if(ncol(originalForestImportance) != 1)
+        stop("originalForestImportance ncol != 1")
+    orderedOriginalImps <- originalForestImportance[plottingOrder, 1,
+                                                    drop = TRUE]
     
     plot(orderedOriginalImps, type = "n", axes = FALSE, 
          xlab = xlab, ylab = ylab,
@@ -1113,12 +1122,13 @@ varSelImpSpecRF <- function(forest,
     if(length(whichImp) > 1) stop("You can only use one importance measure")
 
     originalImps <- switch(whichImp,
-                   "impsUnscaled" =
-                   importance(forest, type = 1, scale = FALSE),
-                   "impsScaled" =
-                   importance(forest, type = 1, scale = TRUE),
-                   "impsGini" =
-                   forest$importance[, ncol(forest$importance)]
+                           "impsUnscaled" =
+                               importance(forest, type = 1, scale = FALSE),
+                           "impsScaled" =
+                               importance(forest, type = 1, scale = TRUE),
+                           "impsGini" =
+                               importance(forest, type = 2, scale = TRUE)
+                   ## forest$importance[, ncol(forest$importance)]
                    )
     if(is.null(originalImps))
         stop("\n Not valid 'whichImp' \n")
