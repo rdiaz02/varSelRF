@@ -15,7 +15,7 @@ random forest.", [BMC Bioinformatics, 2006,
 
 Diaz-Uriarte, 2007, "GeneSrF and varSelRF: a web-based tool and R package
 for gene selection and classification using random forest." [BMC
-Bioinformatics, 8: 328](http://www.biomedcentral.com/1471-2105/7/3/abstract).
+Bioinformatics, 8: 328](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-328).
 
 
 License

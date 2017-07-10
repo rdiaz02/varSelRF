@@ -1,0 +1,33 @@
+citHeader("If you use varSelRF please cite Diaz-Uriarte, 2007 at a minimum. If you ",
+          "refer to the variable selection procedure, you also want to cite ",
+          "Diaz-Uriarte and Alvarez de Andres, 2006.")
+
+
+
+citEntry(entry="Article",
+         author = "R Diaz-Uriarte",
+         title = "GeneSrF and varSelRF: a web-based tool and R package for gene selection and classification using random forest",
+         journal = "BMC Bioinformatics",
+         year = "2007",
+         doi = "10.1186/1471-2105-8-328",
+         url = " https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-328",
+         volume = "8",
+         textVersion = paste("R Diaz-Uriarte.",
+                             "GeneSrF and varSelRF: a web-based tool and R package for gene selection and classification using random forest",
+                             " 2007. BMC Bioinformatics, 8, https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-328.")
+         )
+
+citEntry(entry="Article",
+         author = "R Diaz-Uriarte and A Alvarez de Andres",
+         title = "Gene selection and classification of microarray data using random forest.",
+         journal = "BMC Bioinformatics",
+         year = "2006",
+         doi = "10.1186/1471-2105-7-3",
+         url = "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-3",
+         volume = "7",
+         textVersion = paste("R Diaz-Uriarte and A Alvarez de Andres.",
+                             "Gene selection and classification of microarray data using random forest.",
+                             "2006. BMC Bioinformatics, 7, https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-3.")
+)
+
+
