@@ -142,6 +142,16 @@ varSelRF <- function(xdata, Class,
         else vars.drop <- vars.drop.num
         
         if(num.vars >= (vars.drop + 2)) {
+            ## prevent infinite looping when num.vars is, say, 3 and
+            ## vars.drop.frac < 0.17
+            ## We must drop a variable for sure, since > 2 and we
+            ## are still simplifying
+            ## Alternatively, use ceiling instead of round, above.
+            if(vars.drop == 0) {
+                vars.drop <- 1
+                if( (num.vars - vars.drop) < 1)
+                    stop("vars.drop = 0 and num.vars -vars.drop < 1!")
+            }
             selected.vars <- selected.vars[1: (num.vars - vars.drop)]
             ordered.importances <- ordered.importances[1: (num.vars - vars.drop)]
         }
@@ -584,7 +594,7 @@ varSelRFBoot <- function(xdata, Class,
     
     r <- (one - resubst)/(gamma - resubst)
     r <- ifelse(one > resubst & gamma > resubst, r, 0)
-    if((r > 1) | (r < 0)) { ## just debugging; eliminar m�s adelante
+    if((r > 1) | (r < 0)) { ## just debugging; remove later?
         print(paste("r outside of 0, 1 bounds: one", one,
                     "resubst", resubst, "gamma", gamma))
         if(r > 1) {

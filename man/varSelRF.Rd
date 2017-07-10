@@ -155,6 +155,11 @@ rf.vs1
 plot(rf.vs1)
 
 
+## Note you can use tiny vars.drop.frac
+## though you'll rarely want this
+rf.vs1tiny <- varSelRF(x, cl, ntree = 500, ntreeIterat = 300,
+                   vars.drop.frac = 0.01)
+
 #### Using the final, fitted model to predict other data
 
 ## Simulate new data

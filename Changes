@@ -1,3 +1,8 @@
+0.7-7 (2017-07-10):
+- was looping forever when vars.drop.frac * variables left < 1
+  (thanks for report from Lorenzo Rimoldini)
+- NAMESPACE fixed for no visible global functions
+
 0.7-6 (2015-07-06):
 - randomVarImpsRFplot was not showing names of variables.
 - getting Gini index using type (not position in output!)

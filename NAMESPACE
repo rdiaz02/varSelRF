@@ -7,6 +7,12 @@ export("varSelRF",
 importFrom(randomForest, randomForest, importance)
 importFrom(parallel, clusterApplyLB, clusterEvalQ)
 
+importFrom("grDevices", "dev.interactive", "rainbow")
+importFrom("graphics", "abline", "axis", "box", "boxplot", "dotchart",
+           "legend", "lines", "matlines", "par", "plot", "points",
+           "segments", "text")
+importFrom("stats", "median", "quantile")
+
 S3method(print, varSelRF)
 S3method(plot, varSelRF)
 S3method(print, varSelRFBoot)
