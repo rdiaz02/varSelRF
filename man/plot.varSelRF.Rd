@@ -7,7 +7,7 @@
 \usage{
 \method{plot}{varSelRF}(x, nvar = NULL, which = c(1, 2), ...)
 }
-\arguments{ 
+\arguments{
   \item{x}{The varSelRF object.}
   \item{nvar}{The number of variables for which the initial variable
     importances should be shown. By default, only the 30 with the
@@ -20,23 +20,23 @@
 \value{This function is only used for its side effect of producing plots.
 }
 \references{
-    Diaz-Uriarte, R. and Alvarez de Andres,
-    S. (2005) Variable selection from random forests: application to gene
-    expression
-    data. Tech. report. \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
+Diaz-Uriarte, R. , Alvarez de Andres,
+  S. (2006) Gene selection and classification of microarray data using random forest. \emph{BMC Bioinformatics}, \bold{7},
+  \doi{10.1186/1471-2105-7-3}
+
 }
 \author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}}
 \section{Warning }{The OOB Error rate is biased down (and can be
   severely biased down) because we do (potentially many) rounds of
   reducing the set of predictor variables until we minimize this OOB
-  error rate.} 
+  error rate.}
 
 \seealso{\code{\link{varSelRF}}, \code{\link[randomForest]{randomForest}},
   \code{\link[randomForest]{importance}}}
 \examples{
 x <- matrix(rnorm(25 * 30), ncol = 30)
 x[1:10, 1:2] <- x[1:10, 1:2] + 2
-cl <- factor(c(rep("A", 10), rep("B", 15)))  
+cl <- factor(c(rep("A", 10), rep("B", 15)))
 
 rf.vs1 <- varSelRF(x, cl, ntree = 200, ntreeIterat = 100,
                    vars.drop.frac = 0.2)

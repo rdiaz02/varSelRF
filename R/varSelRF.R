@@ -8,7 +8,7 @@ varSelRF <- function(xdata, Class,
                      c.sd = 1,
                      mtryFactor = 1,
                      ntree = 5000,
-                     ntreeIterat = 2000,                     
+                     ntreeIterat = 2000,
                      vars.drop.num = NULL,
                      vars.drop.frac = 0.2,
                      whole.range = TRUE,
@@ -23,13 +23,13 @@ varSelRF <- function(xdata, Class,
     if( (is.null(vars.drop.num) & is.null(vars.drop.frac)) |
        (!is.null(vars.drop.num) & !is.null(vars.drop.frac)))
         stop("One (and only one) of vars.drop.frac and vars.drop.num must be NULL and the other set")
-  
+
     max.num.steps <- dim(xdata)[2]
     num.subjects <- dim(xdata)[1]
 
     if(is.null(colnames(xdata)))
         colnames(xdata) <- paste("v", 1:dim(xdata)[2], sep ="")
-    
+
     ##oversize the vectors; will prune later.
     n.vars <- vars <- OOB.rf <- OOB.sd <- rep(NA, max.num.steps)
 
@@ -41,7 +41,7 @@ varSelRF <- function(xdata, Class,
         sum(ooo)/s.ooo
     }
 
-    
+
     if(!is.null(fitted.rf)) {
         if(ncol(fitted.rf$importance) < 2)
             stop("The fitted rf was not fitted with importance = TRUE")
@@ -62,7 +62,7 @@ varSelRF <- function(xdata, Class,
                            importance = TRUE,
                            keep.forest = keep.forest)
     }
-    
+
     if(returnFirstForest)
         FirstForest <- rf
     else
@@ -81,18 +81,18 @@ varSelRF <- function(xdata, Class,
     importances <- importance(rf, type = 1, scale = FALSE)
     selected.vars <- order(importances, decreasing = TRUE)
     ordered.importances <- importances[selected.vars]
-    
+
     initialImportances <- importances
     initialOrderedImportances <- ordered.importances
-    
+
     j <- 1
-    n.vars[j] <- dim(xdata)[2] 
+    n.vars[j] <- dim(xdata)[2]
     vars[j] <- paste(colnames(xdata), collapse = " + ")
     OOB.rf[j] <- m.iterated.ob.error
     OOB.sd[j] <- sd.iterated.ob.error
 
     var.simplify <- TRUE
-    
+
     while(var.simplify) {
         if (verbose){
           print("gc inside loop of varSelRF")
@@ -100,8 +100,8 @@ varSelRF <- function(xdata, Class,
         } else {
           gc()
         }
-        
-        last.rf <- rf 
+
+        last.rf <- rf
         last.vars <- selected.vars
         previous.m.error <- m.iterated.ob.error
         previous.sd.error <- sd.iterated.ob.error
@@ -121,26 +121,26 @@ varSelRF <- function(xdata, Class,
 
         ## This way, we enter just to set last.rf, last.vars and
         ## we bail out
-        
+
         if(length(selected.vars) <= 2) {
           var.simplify <- FALSE
           break
         }
 
-        
+
         if(recompute.var.imp & (j > 1)) {
             importances <- importance(rf, type = 1, scale = FALSE)
             tmp.order <- order(importances, decreasing = TRUE)
             selected.vars <- selected.vars[tmp.order]
             ordered.importances <- importances[tmp.order]
         }
-        
+
         num.vars <- length(selected.vars)
-  
+
         if(is.null(vars.drop.num))
             vars.drop <- round(num.vars * vars.drop.frac)
         else vars.drop <- vars.drop.num
-        
+
         if(num.vars >= (vars.drop + 2)) {
             ## prevent infinite looping when num.vars is, say, 3 and
             ## vars.drop.frac < 0.17
@@ -159,19 +159,19 @@ varSelRF <- function(xdata, Class,
             selected.vars <- selected.vars[1:2]
             ordered.importances <- ordered.importances[1:2]
         }
-        
+
         ## couldn't we eliminate the following?
         if((length(selected.vars) < 2) | (any(selected.vars < 1))) {
             var.simplify <- FALSE
             break
         }
-        
-        
-        
+
+
+
         mtry <- floor(sqrt(length(selected.vars)) * mtryFactor)
         if(mtry > length(selected.vars)) mtry <- length(selected.vars)
-        
-        if(recompute.var.imp) 
+
+        if(recompute.var.imp)
             rf <- randomForest(x = xdata[, selected.vars],
                                y = Class, importance= TRUE,
                                ntree = ntree, mtry = mtry,
@@ -181,22 +181,22 @@ varSelRF <- function(xdata, Class,
                                y = Class, importance= FALSE,
                                ntree = ntreeIterat, mtry = mtry,
                                keep.forest = keep.forest)
-        
+
         m.iterated.ob.error <- oobError(rf)
         sd.iterated.ob.error <-
             sqrt(m.iterated.ob.error * (1 - m.iterated.ob.error) *
                  (1/num.subjects))
-        
+
         if(verbose) {
             print(paste("..... iteration ", j, "; OOB error: mean = ",
                         round(m.iterated.ob.error, 4),
                         "; sd = ", round(sd.iterated.ob.error, 4),
-                        "; num. vars = ", length(selected.vars), 
+                        "; num. vars = ", length(selected.vars),
                         sep = ""))
         }
         j <- j + 1
-        
-        
+
+
         n.vars[j] <- length(selected.vars)
         vars[j] <- paste(colnames(xdata)[selected.vars],
                          collapse = " + ")
@@ -293,13 +293,13 @@ plot.varSelRF <- function(x, nvar = NULL, which = c(1, 2), ...) {
     } else {
         op <- par(las = 1)
     }
-    
+
     on.exit(par(op))
-    
+
     if(is.null(nvar))
         nvar <- min(30,
                     length(x$initialOrderedImportances))
-    
+
     show <- c(FALSE, FALSE)
     show[which] <- TRUE
 
@@ -308,7 +308,7 @@ plot.varSelRF <- function(x, nvar = NULL, which = c(1, 2), ...) {
           main = "Initial importances",
           xlab = "Importances (unscaled)")
     }
-    
+
     if (show[2]){
       ylim <- c(0, max(0.50, x$selec.history$OOB))
       plot(x$selec.history$Number.Variables,
@@ -317,11 +317,11 @@ plot.varSelRF <- function(x, nvar = NULL, which = c(1, 2), ...) {
           ylab = "OOB error", log = "x",
           ylim = ylim,
           ...)
-      
+
       ##  if(max(x$selec.history$Number.Variables) > 300)
       ##      axis(1, at = c(1, 2, 3, 5, 8, 15, 25, 50, 75, 150, 200, 300),
       ##           labels = c(1, 2, 3, 5, 8, 15, 25, 50, 75, 150, 200, 300))
-      
+
       lines(x$selec.history$Number.Variables,
           x$selec.history$OOB +
               2 * x$selec.history$sd.OOB, lty = 2)
@@ -330,7 +330,7 @@ plot.varSelRF <- function(x, nvar = NULL, which = c(1, 2), ...) {
               2 * x$selec.history$sd.OOB, lty = 2)
     }
 }
-  
+
 ## We could also write a varSelRFCV zz: move al TODO
 
 varSelRFBoot <- function(xdata, Class,
@@ -347,16 +347,16 @@ varSelRFBoot <- function(xdata, Class,
                          srf = NULL,
                          verbose = TRUE,
                          ...) {
-    
+
     ## beware there is a lot of data copying... pass by reference, or
     ## minimize copying or something.
-    
+
 
     if(is.null(colnames(xdata)))
         colnames(xdata) <- paste("v", 1:dim(xdata)[2], sep ="")
-    
+
     if(!is.null(srf)) { ## we are passing a simplified rf object.
-        if(class(srf) != "varSelRF")
+        if(!inherits(srf, "varSelRF"))
             stop("srf must be the results of a run of varSelRF")
         n.ntree <- srf$ntree
         n.ntreeIterat <- srf$ntreeIterat
@@ -379,11 +379,11 @@ varSelRFBoot <- function(xdata, Class,
                              vars.drop.frac = vars.drop.frac,
                              whole.range = whole.range,
                              recompute.var.imp = recompute.var.imp)
-###                             ...) 
+###                             ...)
     }
     columns.data <- which(colnames(xdata) %in%
                           all.data.run$selected.vars)
-    
+
     all.data.rf.mtry <- floor(mtryFactor * sqrt(length(columns.data)))
     if(all.data.rf.mtry > length(columns.data))
         all.data.rf.mtry <- length(columns.data)
@@ -394,19 +394,19 @@ varSelRFBoot <- function(xdata, Class,
                                         xtest = xdata[, columns.data],
                                         ytest = Class,
                                         keep.forest = FALSE)
-    
+
     full.pred <- all.data.rf.predict$test$predicted
-    
+
     all.data.selected.vars <- all.data.run$selected.vars
     ##    all.data.selected.model <- all.data.run$selected.model
     all.data.best.model.nvars <- all.data.run$best.model.nvars
-    
+
     N <- length(Class)
     solution.sizes <- rep(NA, bootnumber)
     overlap.with.full <- rep(NA, bootnumber)
     vars.in.solutions <- vector()
 ##    solutions <- rep(NA, bootnumber)
-    
+
     bootTrainTest <- function(dummy,
         xdataTheCluster,
         ClassTheCluster,
@@ -430,7 +430,7 @@ varSelRFBoot <- function(xdata, Class,
         }
         ## this is an ugly hack to prevent nobootsamples
         ## of size 0.
-        
+
         train.data <- xdataTheCluster[bootsample, , drop = FALSE]
         test.data <- xdataTheCluster[nobootsample, , drop = FALSE]
         train.class <- ClassTheCluster[bootsample]
@@ -482,7 +482,7 @@ varSelRFBoot <- function(xdata, Class,
     ## xdataTheCluster and ClassTheCluster that need not be defined
     ## if we just copied the code. But that is ugly and hard to follow,
     ## and the non-cluster is slow for other reasons.
-    
+
     if(usingCluster) {
         if (verbose){
           print("gc inside varSelRFBoot papply")
@@ -490,7 +490,7 @@ varSelRFBoot <- function(xdata, Class,
         } else {
           gc()
         }
-        
+
         cat("\n      Running bootstrap iterations using cluster (can take a while)\n")
         boot.runs <- clusterApplyLB(TheCluster,
                                     1:bootnumber,
@@ -527,7 +527,7 @@ varSelRFBoot <- function(xdata, Class,
         }
         cat("\n")
     }
-        
+
 
     solutions <- unlist(lapply(boot.runs, function(z) {
         paste(sort(z$selected.vars), collapse = " + ")}))
@@ -541,7 +541,7 @@ varSelRFBoot <- function(xdata, Class,
                           length(intersect(x$selected.vars,
                                            all.data.selected.vars))/
                                                sqrt(all.data.best.model.nvars *
-                                                    x$best.model.nvars)})) 
+                                                    x$best.model.nvars)}))
 
     prob.pred.array <-
         array(NA, dim = c(N,  nlevels(Class), bootnumber),
@@ -550,7 +550,7 @@ varSelRFBoot <- function(xdata, Class,
 
     ## to store class predictions as data frame
     class.pred.array <- data.frame(Class)
-    
+
     for(nb in 1:bootnumber) {
         nobootsample <- boot.runs[[nb]]$nobootsample
         class.pred.array[[nb]] <- factor(NA, levels = levels(Class))
@@ -562,10 +562,10 @@ varSelRFBoot <- function(xdata, Class,
     names(class.pred.array) <-
         paste("BootstrapReplication.", 1:bootnumber, sep = "")
 
-            
+
     ############## The .632+ estimate of prediction error ##################
     ##      one:         \hat{Err}^{(1)} in Efron & Tibshirani, 1997, p. 550,
-    ##                   or leave-one-out bootstrap error.  
+    ##                   or leave-one-out bootstrap error.
     ##      resubst:     \bar{err}, the apparent error rate, resubstitution rate,
     ##                   or "in sample" error rate.
     ##      full.pred:   the "in sample" prediction from full model; only used
@@ -573,16 +573,16 @@ varSelRFBoot <- function(xdata, Class,
     ##      gamma:       gamma in p. 552
     ##      r:           R in p. 552 (bounding in [0, 1]).
     ##      err632:      the .632 error
-    ##      errprime:    the one prime; \hat{Err}^{(1)}' 
+    ##      errprime:    the one prime; \hat{Err}^{(1)}'
     ##      err:         the .632+ error
-    
+
     ## This is how I find one
-    
+
     one <- mean(apply(cbind(class.pred.array, Class), 1,
                       function(x) {mean(x[-(bootnumber + 1)] != x[bootnumber + 1],
                                         na.rm = TRUE)}), na.rm = TRUE)
     ## this is equivalent to what Torsten Hothorn does in ipred
-            
+
     resubst <- mean(full.pred != Class)
     ## The following code I take directly from the function
     ## bootest.factor, by Torsten Hothorn, in package ipred.
@@ -591,7 +591,7 @@ varSelRFBoot <- function(xdata, Class,
         sum(outer(as.numeric(Class),
                   as.numeric(full.pred),
                   function(x, y) ifelse(x == y, 0, 1)))/(length(Class)^2)
-    
+
     r <- (one - resubst)/(gamma - resubst)
     r <- ifelse(one > resubst & gamma > resubst, r, 0)
     if((r > 1) | (r < 0)) { ## just debugging; remove later?
@@ -606,13 +606,13 @@ varSelRFBoot <- function(xdata, Class,
             print("setting r to 0")
         }
     }
-    
+
     errprime <- min(one, gamma)
     err <- err632 + (errprime - resubst) *
         (0.368 * 0.632 * r)/(1 - 0.368 * r)
     cat("\n     .632+ prediction error ", round(err, 4), "\n")
 
-    out <- list(number.of.bootsamples = bootnumber, 
+    out <- list(number.of.bootsamples = bootnumber,
                 bootstrap.pred.error = err,
                 resubstitution.error = resubst,
                 leave.one.out.bootstrap.error = one,
@@ -641,7 +641,7 @@ print.varSelRFBoot <- function(x, ...) {
     print(x$all.data.vars)
     cat("\n \n Number of variables used: ", length(x$all.data.vars),
         "\n")
-    
+
     cat("\n\n Bootstrap results\n")
     cat(" ------------------\n")
     cat("\n Bootstrap (.632+) estimate of prediction error: \n",
@@ -654,12 +654,12 @@ print.varSelRFBoot <- function(x, ...) {
 
 ## zz: pass gene names and subject names??
 ## look at examples from ~/Proyectos/Signatures/Symposum/boot.pamr.knn.dlda.R
-## o similar 
+## o similar
 ## Or not, because I think I am ussing column names
 ## but look at that code anyway for improvements
 
 
-#### in summaryBoot: a plot of error rate vs. 
+#### in summaryBoot: a plot of error rate vs.
 #### number of variables
 #### requires saving el "all.data.run" en el Boot, which should ALWAYS be done!!
 
@@ -718,7 +718,7 @@ summary.varSelRFBoot <- function(object,
         cat("\n\n Solutions frequencies in bootstrapped models \n")
         print(tmp.table)
     }
-    
+
     if(return.class.probs)
         cat("\n\n Mean class membership probabilities from out of bag samples\n")
     if(return.class.probs) {
@@ -738,7 +738,7 @@ plot.varSelRFBoot <- function(x,
                               subject.names = NULL,
                               class.to.plot = NULL,
                               ...) {
-    
+
     if(oobProb | oobProbBoxPlot) {
         mean.class.probs <- apply(x$prob.predictions, c(1, 2),
                                   function(x) mean(x, na.rm = TRUE))
@@ -784,7 +784,7 @@ plot.varSelRFBoot <- function(x,
             if(!is.null(subject.names))
                 text(mean.class.probs[ , i],
                      labels = subject.names, pos = 2, cex = 0.8)
-            
+
             box()
             ##axis(1)
             par(las = 2)
@@ -803,7 +803,7 @@ plot.varSelRFBoot <- function(x,
                    pch = 19, bty = "n" )
             abline( h = 1.05, lty = 1)
             abline(h = seq(from = 0, to = 1,
-                   length = 1 + nlevels(x$class))[-c(1, nlevels(x$class) + 1)], 
+                   length = 1 + nlevels(x$class))[-c(1, nlevels(x$class) + 1)],
                    lty = 2)
         }
     }
@@ -823,7 +823,7 @@ plot.varSelRFBoot <- function(x,
                   all.data.errors))
         minplot <- minplot * (1 - 0.1)
         maxplot <- maxplot * (1 + 0.2)
-        plot(ngenes, all.data.errors, 
+        plot(ngenes, all.data.errors,
              type = "l", axes = TRUE, xlab = "Number of variables",
              ylab = "OOB Error rate", ylim = c(minplot, maxplot),
              lty = 1,
@@ -843,7 +843,7 @@ plot.varSelRFBoot <- function(x,
 ##        box()
 ##        axis(2)
 ##        axis(1)
-        
+
         if(max(ngenes) > 300)
             axis(1, at = c(2, 3, 5, 8, 15, 20, 25, 35,
                     50, 75, 150, 200, 300),
@@ -869,12 +869,12 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
       stop("whichImp contains a non-valid option; should be one or more \n",
            "of impsScaled, impsUnscaled, impsGini")
 
-  
+
   ontree <- forest$ntree
   omtry <- forest$mtry
-  
+
   nodesize <- 1
-  
+
   if(usingCluster) {
       iRF2.cluster <- function(dummy, xdataTheCluster, ClassTheCluster,
                                ontree, omtry, nodesize, ...) {
@@ -890,19 +890,19 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
         impsScaled <- NULL
         impsUnscaled <- NULL
         impsGini <- NULL
-        if("impsUnscaled" %in% whichImp) 
+        if("impsUnscaled" %in% whichImp)
           impsUnscaled <- importance(rf, type = 1, scale = FALSE)
         if("impsScaled" %in% whichImp)
           impsScaled <- importance(rf, type = 1, scale = TRUE)
         if("impsGini" %in% whichImp)
             impsGini <- importance(rf, type = 2, scale = TRUE)
           ## impsGini <- rf$importance[, ncol(rf$importance)]
-        
+
         return(list(impsScaled,
                     impsUnscaled,
                     impsGini))
     }
-      
+
       outCl <- clusterApplyLB(TheCluster,
                               1:numrandom,
                               iRF2.cluster,
@@ -913,7 +913,7 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
                               nodesize = nodesize)
 
 
-      
+
   } else {
       outCl <- list()
       cat("\n Obtaining random importances ")
@@ -930,7 +930,7 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
         impsScaled <- NULL
         impsUnscaled <- NULL
         impsGini <- NULL
-          if("impsUnscaled" %in% whichImp) 
+          if("impsUnscaled" %in% whichImp)
               impsUnscaled <- importance(rf, type = 1, scale = FALSE)
           if("impsScaled" %in% whichImp)
               impsScaled <- importance(rf, type = 1, scale = TRUE)
@@ -943,9 +943,9 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
       }
       cat("\n")
     } ##</else>
-    
+
   randomVarImps <- list()
-  
+
   if("impsScaled" %in% whichImp) {
     randomVarImps$impsScaled <-
         matrix(unlist(lapply(outCl, function(x) x[[1]])),
@@ -967,7 +967,7 @@ randomVarImpsRF <- function(xdata, Class, forest, numrandom = 100,
     colnames(randomVarImps$impsGini) <- 1:numrandom
     rownames(randomVarImps$impsGini) <- rownames(forest$importance)
   }
-  
+
   class(randomVarImps) <- c(class(randomVarImps),
                             "randomVarImpsRF")
   return(randomVarImps)
@@ -990,11 +990,11 @@ randomVarImpsRFplot <- function(randomImportances,
                                 xlab = NULL,
                                 ylab = NULL,
                                 ...) {
-    
+
     if(ncol(forest$importance) < 2)
         stop("The fitted rf", deparse(substitute(forest)),
              "was not fitted with importance = TRUE")
-    
+
     randomImportances <-
         switch(whichImp,
                "impsUnscaled" = randomImportances$impsUnscaled,
@@ -1014,7 +1014,7 @@ randomVarImpsRFplot <- function(randomImportances,
                )
     if(is.null(originalForestImportance))
         stop("\n Not valid 'whichImp' \n")
-    
+
     if(is.null(xlab)) xlab <- "(Ordered) Variable"
     if(is.null(ylab)) ylab <-
         switch(whichImp,
@@ -1022,9 +1022,9 @@ randomVarImpsRFplot <- function(randomImportances,
                "impsScaled"   = "Importance (scaled)",
                "impsGini"     = "Importance (Gini)",
                )
-               
+
     nvars <- min(nvars, dim(randomImportances)[1])
-    ylim <- range(originalForestImportance, randomImportances)    
+    ylim <- range(originalForestImportance, randomImportances)
     plottingOrder <- order(originalForestImportance,
                            decreasing = TRUE)[1:nvars]
 
@@ -1035,8 +1035,8 @@ randomVarImpsRFplot <- function(randomImportances,
         stop("originalForestImportance ncol != 1")
     orderedOriginalImps <- originalForestImportance[plottingOrder, 1,
                                                     drop = TRUE]
-    
-    plot(orderedOriginalImps, type = "n", axes = FALSE, 
+
+    plot(orderedOriginalImps, type = "n", axes = FALSE,
          xlab = xlab, ylab = ylab,
          main = main, ylim = ylim,
          ...)
@@ -1049,14 +1049,14 @@ randomVarImpsRFplot <- function(randomImportances,
     } else {
         axis(1)
     }
-    
+
     if(!overlayTrue)
          ###points(x = 1:nvars, orderedOriginalImps, lwd = lwdBlack,
            ###    col = "black", type = "b", cex = cexPoint)
         lines(x = 1:nvars, orderedOriginalImps, lwd = lwdBlack,
               col = "black", type = "b", cex = cexPoint)
 
-    
+
     if(!is.null(vars.highlight)) {
         if(length(vars.highlight) > nvars) {
             warning("Not all vars. to highlight will be shown; increase nvars\n")
@@ -1154,20 +1154,20 @@ varSelImpSpecRF <- function(forest,
                    whichImp = "impsUnscaled",
                    usingCluster = usingCluster,
                    TheCluster = TheCluster,
-                   ...)$impsUnscaled, 
+                   ...)$impsUnscaled,
                    "impsUnscaled" = randomVarImpsRF(xdata, Class, forest,
                    numrandom = numrandom,
                    whichImp = "impsScaled",
                    usingCluster = usingCluster,
                    TheCluster = TheCluster,
-                   ...)$impsScaled, 
+                   ...)$impsScaled,
                    "impsUnscaled" = randomVarImpsRF(xdata, Class, forest,
                    numrandom = numrandom,
                    whichImp = "impsGini",
                    usingCluster = usingCluster,
                    TheCluster = TheCluster,
-                   ...)$impsGini, 
-                   )               
+                   ...)$impsGini,
+                   )
     } else {
         elemento <- match(whichImp, names(randomImps))
         if(is.na(elemento))
@@ -1179,7 +1179,7 @@ varSelImpSpecRF <- function(forest,
         randomImps <- randomImps[[elemento]]
 
     }
-     
+
     randomImps <- apply(randomImps, 2,
                         sort, decreasing = TRUE)
     thresholds <- apply(randomImps, 1,
@@ -1212,7 +1212,7 @@ selProbPlot <- function(object,
                         ...) {
     ## selection probability plots, such as in Pepe
     ## et al. 2003 (ROC paper).
-    if(class(object) != "varSelRFBoot")
+    if(!inherits(object, "varSelRFBoot"))
         stop("This function only works with objects created\n",
              "with the varSelRFBoot function.\n")
     nboot <- object$number.of.bootsamples
@@ -1220,7 +1220,7 @@ selProbPlot <- function(object,
         warning("You only used ", nboot,
                 " bootstrap samples. Might be too few.",
                 immediate. = TRUE)
-    
+
     original.imps <- object$all.data.run$initialImportances
     original.ranks <- rank(-original.imps)
     boot.ranks <- lapply(object$allBootRuns,
@@ -1241,7 +1241,7 @@ selProbPlot <- function(object,
         points(original.ranks[original.ranks <= k[1]],
                k1[original.ranks <= k[1]],
                col = "blue", pch = pch)
-        
+
         if(legend) legend(x = xlegend, y = ylegend,
                           legend = c(paste("Top", k[2]),
                           paste("Top", k[1])),
@@ -1281,7 +1281,7 @@ selProbPlot <- function(object,
 
 
 
-    
+
 
 figureSummary.varSelRFBoot <- function(object) {
 ## to create data for figures of paper with randomdata
@@ -1301,7 +1301,7 @@ figureSummary2.varSelRFBoot <- function(object) {
     string1 <- paste(formatC(round(nvused, 0), width = 6)," (",
                      round(iq1.nvars, 0),", ",
                      round(median.nvars, 0), ", ",
-                     round(iq3.nvars, 0),"),  ", 
+                     round(iq3.nvars, 0),"),  ",
                      formatC(round(errorrate, 3), width = 4)," \\\\ ",
                      sep = "")
     string1
@@ -1324,7 +1324,7 @@ tableSummary.varSelRFBoot <- function(object, name){
                   "lymphoma.boot" = "Lymphoma    ",
                   "prostate.boot" = "Prostate    ",
                      "srbct.boot" = "Srbct       ")
-                        
+
     errorrate <- object$bootstrap.pred.error
     nvused <- length(object$all.data.vars)
     median.nvars <- median (object$number.of.vars)
@@ -1341,7 +1341,7 @@ tableSummary.varSelRFBoot <- function(object, name){
         iq3.freq <- quantile(tmp1, p = 0.75)
     }
 
-    if(nvused > 2) 
+    if(nvused > 2)
         string1 <-
             paste(neatname, "&     ",
                   formatC(round(errorrate, 3), width = 4)," &       ",
@@ -1384,7 +1384,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##                 ...) {
 ##     ## from randomVarImpsRF, but simplified to use only
 ##     ## one tytpe of importance
-    
+
 ##     ontree <- forest$ntree
 ##     omtry <- forest$mtry
 
@@ -1443,7 +1443,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##             outCl[[nriter]] <- imps
 ##         }
 ##     }
-    
+
 ##     randomVarImps <- matrix(unlist(outCl), ncol = numrandom)
 ##     rownames(randomVarImps) <- rownames(forest$importance)
 ##     colnames(randomVarImps) <- 1:numrandom
@@ -1485,7 +1485,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ####                        main = NULL, scale = TRUE) {
 ####    nvars <- min(nvars, dim(randomImportances)[1])
 
-    
+
 ####    if(scale) {
 ####        original.imps <- importance(forest, type = 1, scale = TRUE)
 ####    } else {
@@ -1575,19 +1575,19 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##     if( (is.null(vars.drop.num) & is.null(vars.drop.frac)) |
 ##        (!is.null(vars.drop.num) & !is.null(vars.drop.frac)))
 ##         stop("One (and only one) of vars.drop.frac and vars.drop.num must be NULL and the other set")
-    
+
 
 ##     max.num.steps <- dim(xdata)[2]
 ##     num.subjects <- dim(xdata)[1]
 
 ##     if(is.null(colnames(xdata)))
 ##         colnames(xdata) <- paste("v", 1:dim(xdata)[2], sep ="")
-    
+
 ##     ##oversize the vectors; will prune later.
 ##     n.vars <- vars <- OOB.rf <- OOB.sd <- rep(NA, max.num.steps)
-    
+
 ##     ## First get optimal values for mtry and ntree, and get first run:
-    
+
 ##     rf <- tune2RF(x = xdata, y = Class,
 ##                   tuneMtry = tuneMtry, tuneNtree = tuneNtree,
 ##                   startNtree = startNtree, mtryFactor = mtryFactor,
@@ -1607,7 +1607,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##         FirstForest <- rf
 ##     else
 ##         FirstForest <- NULL
-    
+
 ## #    rf <- randomForest(x = xdata, y = Class, importance= TRUE,
 ## #                       ntree = ntree, keep.forest = FALSE)
 ##     m.iterated.ob.error <- m.initial.ob.error <- oobError(rf)
@@ -1626,18 +1626,18 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##     importances <- importance(rf, type = 1, scale = FALSE)
 ##     selected.vars <- order(importances, decreasing = TRUE)
 ##     ordered.importances <- importances[selected.vars]
-    
+
 ##     initialImportances <- importances
 ##     initialOrderedImportances <- ordered.importances
-    
+
 ##     j <- 1
-##     n.vars[j] <- dim(xdata)[2] 
+##     n.vars[j] <- dim(xdata)[2]
 ##     vars[j] <- paste(colnames(xdata), collapse = " + ")
 ##     OOB.rf[j] <- m.iterated.ob.error
 ##     OOB.sd[j] <- sd.iterated.ob.error
 
 ##     var.simplify <- TRUE
-    
+
 ##     while(var.simplify) {
 ##         last.rf <- rf
 ##         last.vars <- selected.vars
@@ -1659,14 +1659,14 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##             ordered.importances <- importances[tmp.order]
 
 ##         }
-        
+
 ##         num.vars <- length(selected.vars)
-  
+
 ## ####        if(any(is.na(ordered.importances))) {
 ## ####            print("**********  Nas in ordered.importances ******")
 ## ####            browser()
 ## ####        }
-           
+
 ##         if(any(ordered.importances < 0)) {
 ##             selected.vars <- selected.vars[-which(ordered.importances < 0)]
 ##             ordered.importances <- ordered.importances[-which(ordered.importances < 0)]
@@ -1674,7 +1674,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##             if(is.null(vars.drop.num))
 ##                 vars.drop <- round(num.vars * vars.drop.frac)
 ##             else vars.drop <- vars.drop.num
-                
+
 ##             if(num.vars >= (vars.drop + 2)) {
 ##                 selected.vars <- selected.vars[1: (num.vars - vars.drop)]
 ##                 ordered.importances <- ordered.importances[1: (num.vars - vars.drop)]
@@ -1691,18 +1691,18 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##         }
 
 ##         if(length(selected.vars) <= 2) var.simplify <- FALSE
-      
-##         if(recompute.var.imp) 
+
+##         if(recompute.var.imp)
 ##             rf <- randomForest(x = xdata[, selected.vars], y = Class, importance= TRUE,
 ##                                ntree = ntree, mtry = mtry, keep.forest = FALSE)
 ##         else
 ##             rf <- randomForest(x = xdata[, selected.vars], y = Class, importance= FALSE,
 ##                                ntree = ntree, mtry = mtry, keep.forest = FALSE)
-        
+
 ##         m.iterated.ob.error <- oobError(rf)
 ##         sd.iterated.ob.error <-
 ##             sqrt(m.iterated.ob.error * (1 - m.iterated.ob.error) * (1/num.subjects))
-        
+
 ##         if(verbose) {
 ##             print(paste("..... iteration ", j, "; OOB error: mean = ",
 ##                         round(m.iterated.ob.error, 4),
@@ -1710,7 +1710,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##         }
 ##         j <- j + 1
 
-        
+
 ##         n.vars[j] <- length(selected.vars)
 ##         vars[j] <- paste(colnames(xdata)[selected.vars],
 ##                          collapse = " + ")
@@ -1868,7 +1868,7 @@ tableSummary.varSelRFBoot <- function(object, name){
 ##                      main =
 ##                      paste("Upper ", quantNtree,
 ##                            "th quantile of importances", sep = ""))
-                     
+
 ##                 break
 ##             }
 ##             tunedNtree <- round(stepFactorNtree * tunedNtree)
@@ -1925,7 +1925,7 @@ boot.imp <- function(data, class, ntree = 20000, B = 200) {
 
 
 ####gl.b.i <- boot.imp(gl.data, gl.class, B = 20)
-        
+
 ####pairs(cbind(gl.b.i, importance(gl.20000.rf, type = 1, scale = FALSE)),
 ####      pch = ".")
 

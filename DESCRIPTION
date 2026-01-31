@@ -1,8 +1,11 @@
 Package: varSelRF
-Version: 0.7-8
-Date: 2017-07-10
+Version: 0.7-9
+Date: 2026-01-30
 Title: Variable Selection using Random Forests
-Author: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
+Authors@R: person(given = "Ramon",
+                      family = "Diaz-Uriarte",
+                      role = c("aut", "cre"),
+                      email = "rdiaz02@gmail.com")
 Maintainer: Ramon Diaz-Uriarte <rdiaz02@gmail.com>
 Depends: R (>= 2.0.0), randomForest, parallel
 Description: Variable selection from random forests using both
@@ -11,11 +14,10 @@ Description: Variable selection from random forests using both
         importance spectrum (somewhat similar to scree plots; for the
         selection of large, potentially highly-correlated variables).
         Main applications in high-dimensional data (e.g., microarray
-        data, and other genomics and proteomics applications). 
+        data, and other genomics and proteomics applications).
 LazyLoad: Yes
 License: GPL (>= 2)
-URL: http://ligarto.org/rdiaz/Software/Software.html,
-     http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html,
+URL: https://ligarto.org/rdiaz/Software/Software.html,
      https://github.com/rdiaz02/varSelRF
 Repository: CRAN
 Date/Publication: 2010-06-04 13:24:22

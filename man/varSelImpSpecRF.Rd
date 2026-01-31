@@ -53,7 +53,7 @@ varSelImpSpecRF(forest, xdata = NULL, Class = NULL,
   (\eqn{i = p}, where \eqn{p} is the number of
   variables),  the variable importances from the original data and from
   each  of the data sets with permuted class labels. (So the ordering is
-  done in each data set independently). Compute 
+  done in each data set independently). Compute
   \eqn{q_i}, the \eqn{1 - threshold} quantile of
   the ordered variable importances from the permuted data at ordered
   postion \eqn{i}. Then,
@@ -70,17 +70,16 @@ varSelImpSpecRF(forest, xdata = NULL, Class = NULL,
   \emph{Machine Learning}, \bold{45}, 5--32.
 
   Diaz-Uriarte, R. , Alvarez de Andres,
-  S. (2005) Variable selection from random forests: application to gene
-  expression
-  data. Tech. report. \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
-  
+  S. (2006) Gene selection and classification of microarray data using random forest. \emph{BMC Bioinformatics}, \bold{7},
+  \doi{10.1186/1471-2105-7-3}
+
   Friedman, J., Meulman, J. (2005) Clustering objects on subsets of attributes (with discussion).
-  \emph{J. Royal Statistical Society, Series B}, \bold{66}, 815--850. } 
+  \emph{J. Royal Statistical Society, Series B}, \bold{66}, 815--850. }
 
 
 \author{Ramon Diaz-Uriarte \email{rdiaz02@gmail.com}} \note{The name
   of this function is related to the idea of "importance spectrum plot",
-  which is the term that \cite{Friedman \& Meulman, 2005} use in their paper.}
+  which is the term that \cite{Friedman & Meulman, 2005} use in their paper.}
 
 \seealso{
   \code{\link[randomForest]{randomForest}},
@@ -92,13 +91,13 @@ varSelImpSpecRF(forest, xdata = NULL, Class = NULL,
 \examples{
 x <- matrix(rnorm(45 * 30), ncol = 30)
 x[1:20, 1:2] <- x[1:20, 1:2] + 2
-cl <- factor(c(rep("A", 20), rep("B", 25)))  
+cl <- factor(c(rep("A", 20), rep("B", 25)))
 
 rf <- randomForest(x, cl, ntree = 200, importance = TRUE)
-rf.rvi <- randomVarImpsRF(x, cl, 
-                          rf, 
-                          numrandom = 20, 
-                          usingCluster = FALSE) 
+rf.rvi <- randomVarImpsRF(x, cl,
+                          rf,
+                          numrandom = 20,
+                          usingCluster = FALSE)
 varSelImpSpecRF(rf, randomImps = rf.rvi)
 
 
@@ -109,11 +108,11 @@ psockCL <- makeCluster(2, "PSOCK")
 clusterSetRNGStream(psockCL, iseed = 456)
 clusterEvalQ(psockCL, library(varSelRF))
 
-rf.rvi <- randomVarImpsRF(x, cl, 
-                          rf, 
-                          numrandom = 20, 
+rf.rvi <- randomVarImpsRF(x, cl,
+                          rf,
+                          numrandom = 20,
                           usingCluster = TRUE,
-                          TheCluster = psockCL) 
+                          TheCluster = psockCL)
 varSelImpSpecRF(rf, randomImps = rf.rvi)
 stopCluster(psockCL)
 

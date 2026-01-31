@@ -49,10 +49,9 @@ randomVarImpsRF(xdata, Class, forest, numrandom = 100,
   Breiman, L. (2001) Random forests.
   \emph{Machine Learning}, \bold{45}, 5--32.
 
-  Diaz-Uriarte, R. and Alvarez de Andres,
-    S. (2005) Variable selection from random forests: application to gene
-    expression
-    data. Tech. report. \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
+Diaz-Uriarte, R. , Alvarez de Andres,
+  S. (2006) Gene selection and classification of microarray data using random forest. \emph{BMC Bioinformatics}, \bold{7},
+  \doi{10.1186/1471-2105-7-3}
 
  Svetnik, V., Liaw, A. , Tong, C & Wang, T. (2004) Application of
  Breiman's random forest to modeling structure-activity relationships of
@@ -75,13 +74,13 @@ randomVarImpsRF(xdata, Class, forest, numrandom = 100,
 
 x <- matrix(rnorm(45 * 30), ncol = 30)
 x[1:20, 1:2] <- x[1:20, 1:2] + 2
-cl <- factor(c(rep("A", 20), rep("B", 25)))  
+cl <- factor(c(rep("A", 20), rep("B", 25)))
 
 rf <- randomForest(x, cl, ntree = 200, importance = TRUE)
-rf.rvi <- randomVarImpsRF(x, cl, 
-                          rf, 
-                          numrandom = 20, 
-                          usingCluster = FALSE) 
+rf.rvi <- randomVarImpsRF(x, cl,
+                          rf,
+                          numrandom = 20,
+                          usingCluster = FALSE)
 
 randomVarImpsRFplot(rf.rvi, rf)
 }

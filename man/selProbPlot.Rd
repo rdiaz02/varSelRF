@@ -4,7 +4,7 @@
 \description{
   Plot, for the top ranked \eqn{k} variables from the original sample, the
   probability that each of these variables is included among the top
-  ranked \eqn{k} genes from the bootstrap samples. 
+  ranked \eqn{k} genes from the bootstrap samples.
 }
 \usage{
 selProbPlot(object, k = c(20, 100),
@@ -54,13 +54,12 @@ selProbPlot(object, k = c(20, 100),
   \emph{Machine Learning}, \bold{45}, 5--32.
 
   Diaz-Uriarte, R. , Alvarez de Andres,
-  S. (2005) Variable selection from random forests: application to gene
-  expression
-  data. Tech. report. \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
+  S. (2006) Gene selection and classification of microarray data using random forest. \emph{BMC Bioinformatics}, \bold{7},
+  \doi{10.1186/1471-2105-7-3}
 
   Pepe, M. S., Longton, G., Anderson, G. L. & Schummer, M. (2003) Selecting differentially expressed genes from microarray experiments.
-    \emph{Biometrics}, \bold{59}, 133--142. 
-  
+    \emph{Biometrics}, \bold{59}, 133--142.
+
  Svetnik, V., Liaw, A. , Tong, C & Wang, T. (2004) Application of
  Breiman's random forest to modeling structure-activity relationships of
  pharmaceutical molecules.  Pp. 334-343 in \emph{F. Roli, J. Kittler, and T. Windeatt}
@@ -88,9 +87,9 @@ selProbPlot(object, k = c(20, 100),
 \examples{
 ## This is a small example, but can take some time.
 
-x <- matrix(rnorm(25 * 30), ncol = 30)
+x <- matrix(rnorm(25 * 15), ncol = 15)
 x[1:10, 1:2] <- x[1:10, 1:2] + 2
-cl <- factor(c(rep("A", 10), rep("B", 15)))  
+cl <- factor(c(rep("A", 10), rep("B", 15)))
 
 rf.vs1 <- varSelRF(x, cl, ntree = 200, ntreeIterat = 100,
                    vars.drop.frac = 0.2)

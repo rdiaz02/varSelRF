@@ -1,3 +1,9 @@
+0.7-9 (2026-01-30):
+- Fixed notes from escaped LaTeX specials,
+  added Authors@R, substituted citEntry by bibentry,
+  fixed notes about invalid HTMLs, other miscell.
+  NOTE fixes.
+
 0.7-8 (2017-07-10):
 - Fixed citation
 

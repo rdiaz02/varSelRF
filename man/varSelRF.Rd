@@ -66,7 +66,7 @@ varSelRF(xdata, Class, c.sd = 1, mtryFactor = 1, ntree = 5000,
   forests, we examine the OOB error rates from all the fitted random
   forests. We choose the solution with the smallest number of genes
   whose error rate is within \code{c.sd} standard errors of the minimum error
-  rate of all forests. (The standard error is calculated using the 
+  rate of all forests. (The standard error is calculated using the
   expression for a biomial error count [\eqn{\sqrt{p (1-p) * 1/N}}]).
   Setting \code{c.sd = 0} is the same as selecting the set of genes that leads
   to the smallest error rate.  Setting \code{c.sd = 1} is similar to the
@@ -121,11 +121,10 @@ varSelRF(xdata, Class, c.sd = 1, mtryFactor = 1, ntree = 5000,
   Breiman, L. (2001) Random forests.
   \emph{Machine Learning}, \bold{45}, 5--32.
 
-  Diaz-Uriarte, R. and Alvarez de Andres,
-    S. (2005) Variable selection from random forests: application to gene
-    expression
-    data. Tech. report.
-    \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
+
+  Diaz-Uriarte, R. , Alvarez de Andres,
+  S. (2006) Gene selection and classification of microarray data using random forest. \emph{BMC Bioinformatics}, \bold{7},
+  \doi{10.1186/1471-2105-7-3}
 
  Svetnik, V., Liaw, A. , Tong, C & Wang, T. (2004) Application of
  Breiman's random forest to modeling structure-activity relationships of
@@ -146,9 +145,9 @@ x <- matrix(rnorm(25 * 30), ncol = 30)
 colnames(x) <- paste("v", 1:30, sep = "")
 x[1:10, 1:2] <- x[1:10, 1:2] + 1
 x[1:4, 5] <- x[1:4, 5] - 1.5
-x[5:10, 8] <- x[5:10, 8] + 1.4 
+x[5:10, 8] <- x[5:10, 8] + 1.4
 
-cl <- factor(c(rep("A", 10), rep("B", 15)))  
+cl <- factor(c(rep("A", 10), rep("B", 15)))
 rf.vs1 <- varSelRF(x, cl, ntree = 500, ntreeIterat = 300,
                    vars.drop.frac = 0.2)
 rf.vs1

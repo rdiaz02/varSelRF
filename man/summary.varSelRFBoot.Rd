@@ -24,7 +24,7 @@
 }
 \value{
   If \code{return.class.probs = TRUE} a matrix with the average class
-  probabilities  for each sample based on the out-of-bag probabilites. 
+  probabilities  for each sample based on the out-of-bag probabilites.
 
   Regardless of that setting, print out several summaries:
 %  \begin{itemize}
@@ -42,21 +42,20 @@
     "models", where a
     model is the set of variables selected in any particular run.}
 %    \end{itemize}
-    
+
 }
 \references{
 
   Breiman, L. (2001) Random forests.
   \emph{Machine Learning}, \bold{45}, 5--32.
 
-  Diaz-Uriarte, R. and Alvarez de Andres,
-    S. (2005) Variable selection from random forests: application to gene
-    expression
-    data. Tech. report. \url{http://ligarto.org/rdiaz/Papers/rfVS/randomForestVarSel.html}
+Diaz-Uriarte, R. , Alvarez de Andres,
+  S. (2006) Gene selection and classification of microarray data using random forest. \emph{BMC Bioinformatics}, \bold{7},
+  \doi{10.1186/1471-2105-7-3}
 
    Efron, B. & Tibshirani, R. J. (1997) Improvements on cross-validation: the .632+ bootstrap method.
-    \emph{J. American Statistical Association}, \bold{92}, 548--560.  
-    
+    \emph{J. American Statistical Association}, \bold{92}, 548--560.
+
 
 }
 \author{Ramon Diaz-Uriarte  \email{rdiaz02@gmail.com}}
@@ -73,7 +72,7 @@
 
 x <- matrix(rnorm(25 * 30), ncol = 30)
 x[1:10, 1:2] <- x[1:10, 1:2] + 2
-cl <- factor(c(rep("A", 10), rep("B", 15)))  
+cl <- factor(c(rep("A", 10), rep("B", 15)))
 
 rf.vs1 <- varSelRF(x, cl, ntree = 200, ntreeIterat = 100,
                    vars.drop.frac = 0.2)
